@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Конструктор письма партнёру</title>
+<style>
+:root{--y:#FFDD2D;--b:#333;--w:#fff;--g:#F6F6F6;--bd:#E0E0E0}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--b);background:var(--w);-webkit-font-smoothing:antialiased}
+header{display:flex;align-items:center;gap:12px;padding:16px 24px;border-bottom:1px solid var(--bd)}
+.logo{width:36px;height:36px;background:var(--y);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:20px}
+header h1{font-size:18px;font-weight:600;margin:0}
+.progress{height:4px;background:var(--g)}
+.progress-bar{height:100%;background:var(--y);width:0%;transition:.3s}
+.wrap{display:flex;gap:0;max-width:1400px;margin:0 auto}
+.col{flex:1;padding:20px;min-width:0}
+.col-form{border-right:1px solid var(--bd);max-height:calc(100vh - 70px);overflow-y:auto}
+.col-preview{background:var(--g)}
+fieldset{border:1px solid var(--bd);border-radius:14px;padding:14px;margin:0 0 14px;background:var(--w)}
+legend{font-weight:600;padding:0 6px}
+label{display:block;font-size:13px;margin:10px 0 4px;font-weight:400}
+input[type=text],input[type=number],select,textarea{
+width:100%;padding:9px 12px;border:1px solid var(--bd);border-radius:12px;background:var(--g);font-size:16px;font-family:inherit;color:var(--b)}
+textarea{min-height:70px;resize:vertical}
+input.err{border-color:#e04b4b;background:#fff0f0}
+
+.opt-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.opt-btn{padding:9px 14px;border-radius:12px;border:1.5px solid var(--bd);background:var(--g);font-size:14px;cursor:pointer;user-select:none;font-family:inherit;color:var(--b);transition:.15s}
+.opt-btn.active{background:var(--y);border-color:var(--y);font-weight:600}
+
+.slider-wrap{margin-top:10px}
+.slider-vals{display:flex;justify-content:space-between;font-size:13px;color:#666;margin-top:4px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:4px;background:var(--bd);outline:none;margin:10px 0;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:4px;background:var(--bd)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:var(--y);border:3px solid var(--b);margin-top:-8px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.15s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.1)}
+input[type=range]::-moz-range-track{height:6px;border-radius:4px;background:var(--bd)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--y);border:3px solid var(--b);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.15s}
+input[type=range]::-moz-range-thumb:hover{transform:scale(1.1)}
+
+.static-block{background:var(--g);border:1px solid var(--bd);border-radius:12px;padding:12px;font-size:13px;color:#555;margin-top:8px;line-height:1.5}
+.sub-box{border:1px dashed var(--bd);border-radius:12px;padding:12px;margin-top:10px}
+.smalllink{margin-top:6px}
+.preview-box{background:var(--w);border:1px solid var(--bd);border-radius:14px;padding:28px;font-size:14px;line-height:1.6;min-height:300px}
+
+.panel{position:sticky;bottom:0;background:var(--w);border-top:1px solid var(--bd);padding:12px 24px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.btn{border:none;border-radius:12px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-y{background:var(--y);color:var(--b)}
+.btn-o{background:transparent;color:var(--b);border:1.5px solid var(--b)}
+.btn-sm{padding:6px 10px;font-size:13px;border-radius:10px}
+@media(max-width:900px){.wrap{flex-direction:column}.col-form{border-right:none;border-bottom:1px solid var(--bd);max-height:none}}
+</style>
+</head>
+<body>
+<header><div class="logo">Т</div><h1>Конструктор письма партнёру</h1></header>
+<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+<div class="wrap">
+<div class="col col-form">
+
+<fieldset><legend>1. Коммуникация и партнёр</legend>
+<label>Как проходила коммуникация</label>
+<div class="opt-group" id="commGroup">
+<button type="button" class="opt-btn" data-val="phone">Звонок</button>
+<button type="button" class="opt-btn" data-val="meeting">Встреча</button>
+</div>
+<label>Имя контактного лица</label>
+<input type="text" id="contactName" placeholder="Иван">
+<label>Компания-партнёр *</label>
+<input type="text" id="partnerName" placeholder="ООО «Ромашка»">
+</fieldset>
+
+<fieldset><legend>2. Менеджер и лендинг с условиями</legend>
+<label>Фамилия Имя менеджера</label>
+<input type="text" id="managerName" placeholder="Петров Пётр">
+<label>Телефон менеджера</label>
+<input type="text" id="managerPhone" placeholder="+7 900 000-00-00">
+<label>Почта менеджера</label>
+<input type="text" id="managerEmail" placeholder="manager@tbank.ru">
+<label>Ссылка на страницу с условиями на домене банка (необязательно)</label>
+<input type="text" id="landingUrl" placeholder="https://www.tbank.ru/...">
+<div class="static-block" id="landingUrlWarn" style="display:none;background:#FFF4E5;border-color:#F0B429;color:#7A4B00"></div>
+<div class="static-block">Поле можно не заполнять: без ссылки индивидуальные условия уходят прямо в письме — таблицами, ничего публиковать не нужно. Ссылку вставляйте, только если страница с условиями размещена на домене банка (tbank.ru, dolyame.ru) — тогда письмо станет коротким, с кнопкой «Смотреть индивидуальные условия».</div>
+</fieldset>
+
+<fieldset><legend>3. Продукты</legend>
+<label>Продукты (можно выбрать несколько)</label>
+<div class="opt-group" id="productGroup">
+<button type="button" class="opt-btn" data-val="Кредит">Кредит</button>
+<button type="button" class="opt-btn" data-val="Рассрочка">Рассрочка</button>
+<button type="button" class="opt-btn" data-val="Долями">Долями</button>
+</div>
+
+<div id="block-credit">
+  <div class="static-block" style="background:none;border:none;padding:0;margin-bottom:6px;font-weight:600">Кредит</div>
+  <label>Ставка (иллюстративная), % годовых</label>
+  <div class="slider-wrap">
+    <input type="range" id="creditRate" min="15" max="32" value="20">
+    <div class="slider-vals"><span>15%</span><span id="creditRateVal">20%</span><span>32%</span></div>
+  </div>
+  <div class="static-block">В письме всегда идёт честный диапазон 14–32% годовых — итоговая ставка зависит от профиля клиента.</div>
+</div>
+
+<div id="block-installment">
+  <div class="static-block" style="background:none;border:none;padding:0;margin-bottom:6px;font-weight:600">Рассрочка</div>
+  <label>Ставка для расчёта комиссии, % годовых (внутренний параметр, в письмо не идёт)</label>
+  <div class="slider-wrap">
+    <input type="range" id="installmentRate" min="15" max="32" value="21">
+    <div class="slider-vals"><span>15%</span><span id="installmentRateVal">21%</span><span>32%</span></div>
+  </div>
+  <label>Сроки, мес. (можно выбрать несколько — по каждому посчитается своя комиссия)</label>
+  <div class="opt-group" id="termGroup">
+    <button type="button" class="opt-btn" data-val="3">3</button>
+    <button type="button" class="opt-btn" data-val="4">4</button>
+    <button type="button" class="opt-btn" data-val="6">6</button>
+    <button type="button" class="opt-btn" data-val="10">10</button>
+    <button type="button" class="opt-btn" data-val="12">12</button>
+    <button type="button" class="opt-btn" data-val="18">18</button>
+    <button type="button" class="opt-btn" data-val="24">24</button>
+    <button type="button" class="opt-btn" data-val="36">36</button>
+  </div>
+</div>
+
+<div id="block-bnpl">
+  <div class="static-block" style="background:none;border:none;padding:0;margin-bottom:6px;font-weight:600">Долями</div>
+  <label>Комиссия, %</label>
+  <div class="slider-wrap">
+    <input type="range" id="bnplFee" min="1.5" max="10" step="0.1" value="5">
+    <div class="slider-vals"><span>1,5%</span><span id="bnplFeeVal">5%</span><span>10%</span></div>
+  </div>
+  <div class="static-block">В письме: единая платёжная форма, лимит от 1 000 до 500 000 руб., плюс описание механик (сроки 3/6/10 мес.).</div>
+</div>
+</fieldset>
+
+<fieldset><legend>4. Техническая интеграция</legend>
+<div class="opt-group" id="techGroup">
+<button type="button" class="opt-btn" data-id="i_widget">Виджет на сайт</button>
+<button type="button" class="opt-btn" data-id="i_button">Кнопка оплаты</button>
+<button type="button" class="opt-btn" data-id="i_popup">Попап / всплывающее окно</button>
+<button type="button" class="opt-btn" data-id="i_qr">Статический QR-код</button>
+<button type="button" class="opt-btn" data-id="i_cash">Кассовый модуль (оффлайн)</button>
+<button type="button" class="opt-btn" data-id="i_api">API / интеграция</button>
+<button type="button" class="opt-btn" data-id="i_tid">T-ID / автоматизация через Т-Банк</button>
+</div>
+</fieldset>
+
+<fieldset><legend>5. Маркетинг</legend>
+<div class="opt-group" id="mktGroup">
+<button type="button" class="opt-btn" data-id="m_layouts">Макеты рекламы</button>
+<button type="button" class="opt-btn" data-id="m_banners">Баннеры</button>
+<button type="button" class="opt-btn" data-id="m_promo">Промо-материалы</button>
+<button type="button" class="opt-btn" data-id="m_audio">Аудиоролик для оффлайна</button>
+<button type="button" class="opt-btn" data-id="m_site">Размещение на сайте партнёра</button>
+<button type="button" class="opt-btn" data-id="m_pos">Размещение на торговой точке</button>
+</div>
+</fieldset>
+
+<fieldset><legend>6. Работа с персоналом партнёра</legend>
+<div class="opt-group" id="staffGroup">
+<button type="button" class="opt-btn" data-id="p_training">Обучение сотрудников</button>
+<button type="button" class="opt-btn" data-id="p_motivation">Мотивационная акция для персонала</button>
+<button type="button" class="opt-btn" data-id="p_cofin">Софинансирование акции</button>
+<button type="button" class="opt-btn" data-id="p_merch">Розыгрыш мерча / призов</button>
+</div>
+
+<div id="motivationInner" style="display:none">
+  <div class="static-block" id="motivationUnavailable" style="display:none">Мотивационные программы доступны только для «Кредита» и «Рассрочки». По «Долями» мотивацию не начисляем.</div>
+  <div id="motivationControls">
+    <label>Тип вознаграждения</label>
+    <div class="opt-group" id="motivationTypeGroup">
+      <button type="button" class="opt-btn" data-val="AB">АВ — агентское вознаграждение за объём продаж</button>
+      <button type="button" class="opt-btn" data-val="KV">КВ на РС — комиссионное вознаграждение</button>
+    </div>
+    <div id="motivationRateBlock" style="display:none">
+      <label>Ставка вознаграждения, %</label>
+      <div class="slider-wrap">
+        <input type="range" id="motivationRate" min="0" max="15" step="0.5" value="5">
+        <div class="slider-vals"><span>0%</span><span id="motivationRateVal">5%</span><span>15%</span></div>
+      </div>
+      <label>Дополнительные вознаграждения</label>
+      <div class="opt-group" id="motivationAddonGroup">
+        <button type="button" class="opt-btn" data-val="insurance">Коробочное страхование</button>
+        <button type="button" class="opt-btn" data-val="sms">Push-SMS</button>
+      </div>
+      <div class="sub-box" id="insuranceBlock" style="display:none">
+        <label style="margin-top:0">Стоимость страховки, % в месяц</label>
+        <div class="slider-wrap">
+          <input type="range" id="insuranceCost" min="0.1" max="3" step="0.1" value="0.5">
+          <div class="slider-vals"><span>0,1%</span><span id="insuranceCostVal">0,5%</span><span>3%</span></div>
+        </div>
+        <label>Вознаграждение партнёру от страховки, % в месяц</label>
+        <div class="slider-wrap">
+          <input type="range" id="insuranceReward" min="30" max="100" step="10" value="50">
+          <div class="slider-vals"><span>30%</span><span id="insuranceRewardVal">50%</span><span>100%</span></div>
+        </div>
+      </div>
+      <div class="sub-box" id="smsBlock" style="display:none">
+        <label style="margin-top:0">Стоимость push-SMS, руб.</label>
+        <div class="opt-group" id="smsPriceGroup">
+          <button type="button" class="opt-btn" data-val="199">199 ₽</button>
+          <button type="button" class="opt-btn" data-val="299">299 ₽</button>
+          <button type="button" class="opt-btn" data-val="399">399 ₽</button>
+          <button type="button" class="opt-btn" data-val="500">500 ₽</button>
+        </div>
+      </div>
+      <label>Кредитный оборот, руб./мес.</label>
+      <input type="number" id="creditTurnover" placeholder="Например, 500000">
+      <label>Средний срок (авто, по выбранным продуктам)</label>
+      <div class="static-block" id="avgTermDisplay">—</div>
+    </div>
+  </div>
+</div>
+</fieldset>
+
+<div class="smalllink"><button type="button" class="btn btn-o btn-sm" id="clearDraft">Очистить черновик</button></div>
+</div>
+
+<div class="col col-preview">
+<h3 style="margin-top:0">Предпросмотр письма</h3>
+<div class="preview-box" id="preview"></div>
+</div>
+</div>
+
+<div class="panel">
+<button class="btn btn-o" id="btnChecklist">Скачать чек-лист</button>
+<button class="btn btn-o" id="btnLanding">Скачать HTML лендинга</button>
+<button class="btn btn-y" id="btnCopy">Скопировать письмо</button>
+<button class="btn btn-o" id="btnEml">Скачать .eml</button>
+<button class="btn btn-o" id="btnReset">Сбросить форму</button>
+</div>
+
+<script>
+// ===== инлайн-палитра: используется для ВСЕХ генерируемых блоков письма,
+// чтобы превью / .eml / копирование в буфер выглядели одинаково
+// (внешние классы и flexbox Outlook и подобные клиенты не поддерживают) =====
+const C = { yellow:'#FFDD2D', text:'#333', gray:'#F6F6F6', border:'#E0E0E0', muted:'#888', noteBg:'#FFF9E0' };
+
+// ССЫЛКИ — собраны с официального сайта tbank.ru (раздел «Бизнесу»).
+const LINKS = {
+  posLending: {
+    widget:      "https://www.tbank.ru/business/help/sales/loans/how-to-integrate/",
+    button:      "https://www.tbank.ru/business/help/sales/loans/how-to-integrate/button/",
+    popup:       "https://www.tbank.ru/business/help/sales/loans/how-to-integrate/button/",
+    qr:          "https://www.tbank.ru/business/help/sales/loans/how-to-integrate/link-or-QR/",
+    cashModule:  "https://www.tbank.ru/business/help/sales/loans/offline-integration/API-how-in-offline/",
+    api:         "https://www.tbank.ru/business/help/sales/loans/how-to-integrate/API/",
+    tId:         "https://developer.tbank.ru/docs/intro/partner",
+  },
+  dolyame: {
+    widget:      "https://www.tbank.ru/business/help/business-payments/internet-acquiring/how-involve/integrate/",
+    button:      "https://www.tbank.ru/business/help/business-payments/internet-acquiring/how-involve/integrate/",
+    popup:       "https://www.tbank.ru/business/help/business-payments/internet-acquiring/how-involve/integrate/",
+    qr:          "https://www.tbank.ru/business/help/business-payments/internet-acquiring/how-involve/integrate/",
+    cashModule:  "",
+    api:         "https://www.tbank.ru/business/online-payments/develop/",
+    tId:         "https://developer.tbank.ru/docs/intro/partner",
+  },
+  common: {
+    layouts:     "https://www.tbank.ru/business/help/sales/loans/about-loans/promo/",
+    banners:     "https://www.tbank.ru/business/loans/integration/guidebook/",
+    promo:       "https://www.tbank.ru/business/help/sales/loans/about-loans/offline-promo/",
+    audio:       "https://www.tbank.ru/business/help/sales/loans/about-loans/promo/",
+    training:    "https://www.tbank.ru/business/help/sales/loans/lend/start/",
+    motivation:  "",
+    cofinancing: "",
+  },
+};
+const link = k => LINKS.common[k] ? LINKS.common[k] : "";
+
+function activeLinkContexts(){
+  const ps = getProducts();
+  const ctxs = [];
+  if(ps.includes('Кредит') || ps.includes('Рассрочка')) ctxs.push('posLending');
+  if(ps.includes('Долями')) ctxs.push('dolyame');
+  return ctxs;
+}
+function techContextLabel(ctx){ return ctx==='posLending' ? 'Рассрочка и Кредит' : 'Долями'; }
+
+function $(id){return document.getElementById(id)}
+function val(id){return $(id).value.trim()}
+// Ссылка на лендинг: дописываем https://, пропускаем только http(s);
+// всё остальное считаем пустым — письмо уйдёт с условиями в теле.
+const BANK_HOSTS = ['tbank.ru','dolyame.ru'];
+function parseLandingUrl(){
+  let raw = val('landingUrl');
+  if(!raw) return null;
+  if(!/^[a-z][a-z0-9+.-]*:/i.test(raw)) raw = 'https://' + raw;
+  let u;
+  try{ u = new URL(raw); }catch(e){ return {error:'Это не похоже на ссылку — письмо уйдёт с условиями в теле.'}; }
+  if(u.protocol!=='https:' && u.protocol!=='http:') return {error:'Ссылка должна начинаться с https:// — письмо уйдёт с условиями в теле.'};
+  if(!u.hostname.includes('.')) return {error:'Это не похоже на ссылку — письмо уйдёт с условиями в теле.'};
+  const host = u.hostname.toLowerCase();
+  const bank = BANK_HOSTS.some(h=>host===h || host.endsWith('.'+h));
+  return {href:u.href, host, bank};
+}
+function landingUrlClean(){
+  const r = parseLandingUrl();
+  return r && r.href ? r.href : '';
+}
+function updateLandingUrlWarn(){
+  const box = $('landingUrlWarn');
+  const r = parseLandingUrl();
+  let msg = '';
+  if(r && r.error) msg = r.error;
+  else if(r && !r.bank) msg = `Ссылка ведёт на ${r.host}, а не на домен банка. Партнёр и почтовые фильтры могут принять такое письмо за фишинг. Надёжнее оставить поле пустым — условия уйдут в теле письма.`;
+  box.textContent = msg;
+  box.style.display = msg ? 'block' : 'none';
+}
+
+let state = {
+  term: new Set(), tech: new Set(), mkt: new Set(), staff: new Set(),
+  motivationAddon: new Set(), commChannel: null, motivationType: null, smsPrice: null,
+};
+
+function setupMultiSelect(groupId, stateSetKey, dataAttr){
+  dataAttr = dataAttr || 'id';
+  $(groupId).querySelectorAll('.opt-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      btn.classList.toggle('active');
+      const id = btn.dataset[dataAttr];
+      if(btn.classList.contains('active')) state[stateSetKey].add(id);
+      else state[stateSetKey].delete(id);
+      update();
+    });
+  });
+}
+function setupSingleSelect(groupId, onChange, dataAttr){
+  dataAttr = dataAttr || 'val';
+  const group = $(groupId);
+  group.querySelectorAll('.opt-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const already = btn.classList.contains('active');
+      group.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('active'));
+      if(!already) btn.classList.add('active');
+      onChange(already ? null : btn.dataset[dataAttr]);
+      update();
+    });
+  });
+}
+
+setupMultiSelect('termGroup','term','val');
+setupMultiSelect('techGroup','tech');
+setupMultiSelect('mktGroup','mkt');
+setupMultiSelect('staffGroup','staff');
+setupMultiSelect('motivationAddonGroup','motivationAddon','val');
+setupSingleSelect('commGroup', v=>{ state.commChannel = v; });
+setupSingleSelect('motivationTypeGroup', v=>{ state.motivationType = v; });
+setupSingleSelect('smsPriceGroup', v=>{ state.smsPrice = v; });
+
+$('creditRate').addEventListener('input', ()=>{ $('creditRateVal').textContent = $('creditRate').value + '%'; update(); });
+$('installmentRate').addEventListener('input', ()=>{ $('installmentRateVal').textContent = $('installmentRate').value + '%'; update(); });
+$('bnplFee').addEventListener('input', ()=>{ $('bnplFeeVal').textContent = fmtPct($('bnplFee').value) + '%'; update(); });
+$('motivationRate').addEventListener('input', ()=>{ $('motivationRateVal').textContent = fmtPct($('motivationRate').value) + '%'; update(); });
+$('insuranceCost').addEventListener('input', ()=>{ $('insuranceCostVal').textContent = fmtPct($('insuranceCost').value) + '%'; update(); });
+$('insuranceReward').addEventListener('input', ()=>{ $('insuranceRewardVal').textContent = fmtPct($('insuranceReward').value) + '%'; update(); });
+$('creditTurnover').addEventListener('input', update);
+$('contactName').addEventListener('input', update);
+$('managerName').addEventListener('input', update);
+$('managerPhone').addEventListener('input', update);
+$('managerEmail').addEventListener('input', update);
+$('landingUrl').addEventListener('input', ()=>{ updateLandingUrlWarn(); update(); });
+
+function getProducts(){
+  return [...document.querySelectorAll('#productGroup .opt-btn.active')].map(b=>b.dataset.val);
+}
+function updateProductVisibility(){
+  const ps = getProducts();
+  $('block-credit').style.display = ps.includes('Кредит') ? 'block' : 'none';
+  $('block-installment').style.display = ps.includes('Рассрочка') ? 'block' : 'none';
+  $('block-bnpl').style.display = ps.includes('Долями') ? 'block' : 'none';
+}
+document.querySelectorAll('#productGroup .opt-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{ btn.classList.toggle('active'); updateProductVisibility(); update(); });
+});
+
+function fmtMoney(n){ return Number(n).toLocaleString('ru-RU') + ' руб.'; }
+function fmtPct(v){ return Number(v).toLocaleString('ru-RU', {maximumFractionDigits:1}); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+const STAFF_MAP = {
+  p_training:['Обучение сотрудников','training'],
+  p_motivation:['Мотивационная акция для персонала','motivation'],
+  p_cofin:['Софинансирование акции','cofinancing'],
+  p_merch:['Розыгрыш мерча / призов',null],
+};
+const TECH_LABEL = {i_widget:'Виджет на сайт', i_button:'Кнопка оплаты', i_popup:'Попап / всплывающее окно',
+  i_qr:'Статический QR-код', i_cash:'Кассовый модуль (оффлайн)', i_api:'API / интеграция', i_tid:'T-ID / автоматизация через Т-Банк'};
+const TECH_KEY = {i_widget:'widget', i_button:'button', i_popup:'popup', i_qr:'qr', i_cash:'cashModule', i_api:'api', i_tid:'tId'};
+const TECH_AGREEMENT = {
+  i_widget: 'Партнёр размещает виджет на сайте',
+  i_button: 'Партнёр подключает кнопку оплаты на сайте',
+  i_popup: 'Партнёр внедряет всплывающее окно (попап) с формой заявки',
+  i_qr: 'Партнёр использует ссылку или QR-код для приёма оплаты',
+  i_cash: 'Партнёр подключает приём оплаты в офлайн-точке (кассовый модуль)',
+  i_api: 'Команда партнёра интегрирует приём оплаты по API',
+  i_tid: 'Настраивается автоматизация через T-ID',
+};
+const MKT_LABEL = {m_layouts:'Макеты рекламы', m_banners:'Баннеры', m_promo:'Промо-материалы',
+  m_audio:'Аудиоролик для оффлайна', m_site:'Размещение на сайте партнёра', m_pos:'Размещение на торговой точке'};
+const MKT_KEY = {m_layouts:'layouts', m_banners:'banners', m_promo:'promo', m_audio:'audio', m_site:null, m_pos:null};
+const MKT_AGREEMENT = {
+  m_layouts: 'Т-Банк передаёт макеты рекламы',
+  m_banners: 'Т-Банк передаёт баннеры для сайта и точек продаж',
+  m_promo: 'Т-Банк передаёт промо-набор для офлайн-точки (стикеры, баннеры, хенгеры)',
+  m_audio: 'Т-Банк передаёт аудиоролик для озвучивания в точках продаж',
+  m_site: 'Материалы размещаются на сайте партнёра',
+  m_pos: 'Материалы размещаются на торговой точке партнёра',
+};
+
+// Комиссия по рассрочке — формула из Поиск_скидок.xlsx (аннуитетный платёж), без первоначального взноса.
+function installmentCommissionPct(annualRatePct, months){
+  const r = annualRatePct/1200, n = months;
+  if(!n || r<=0) return 0;
+  const annuityFactor = (1-Math.pow(1+r,-n))/r;
+  return (1 - annuityFactor/n)*100;
+}
+
+// Ссылка 'как это выглядит' — на официальный ресурс с визуалом продукта (не картинка, а ссылка на неё)
+function visualLink(productName){
+  return productName==='Долями' ? 'https://www.tbank.ru/dolyame/business/' : 'https://www.tbank.ru/business/loans/';
+}
+
+function getProductBlocks(){
+  const ps = getProducts();
+  const blocks = [];
+  ps.forEach(p=>{
+    if(p==='Кредит'){
+      const rate = Number($('creditRate').value);
+      blocks.push({name:'Кредит', cards:[{k:'Ставка', v:rate+'%'}],
+        note:'Итоговая ставка зависит от профиля клиента и обычно составляет от 14% до 32% годовых.',
+        visual: visualLink('Кредит')});
+    } else if(p==='Рассрочка'){
+      const rate = Number($('installmentRate').value);
+      const terms = [...state.term].map(Number).sort((a,b)=>a-b);
+      let table = null;
+      if(terms.length) table = terms.map(m=>({months:m, pct:installmentCommissionPct(rate,m)}));
+      blocks.push({name:'Рассрочка', cards:[], note:null, table, visual: visualLink('Рассрочка')});
+    } else if(p==='Долями'){
+      const fee = $('bnplFee').value;
+      const cards = [
+        {k:'Комиссия', v:fmtPct(fee)+'%'},
+        {k:'Лимит', v:'1 000–500 000 ₽'},
+        {k:'Позиционирование', v:'Первый BNPL-брокер в стране'},
+        {k:'Технология', v:'Несколько BNPL-сервисов «под капотом»'},
+        {k:'Сроки', v:'6 недель, 3, 6, 10 мес.'},
+      ];
+      blocks.push({name:'Долями', cards, note:null, visual: visualLink('Долями')});
+    }
+  });
+  return blocks;
+}
+
+function agreedTermsList(){
+  const items = [];
+  getProductBlocks().forEach(b=>{
+    if(b.name==='Кредит') items.push('Кредит — ставка от 14% до 32% годовых (зависит от профиля клиента), без первоначального взноса для клиентов.');
+    else if(b.name==='Рассрочка'){
+      const terms = [...state.term].map(Number).sort((a,b)=>a-b);
+      if(!terms.length) items.push('Рассрочка — без первоначального взноса для клиентов, сроки и комиссия согласуются отдельно.');
+      else {
+        const feeTxt = landingUrlClean() ? 'комиссия — на странице с индивидуальными условиями' : 'комиссия — по таблице выше';
+        items.push(`Рассрочка — сроки ${terms.join(', ')} мес., без первоначального взноса для клиентов, ${feeTxt}.`);
+      }
+    } else if(b.name==='Долями') items.push(`Долями — комиссия ${fmtPct($('bnplFee').value)}%, лимит от 1 000 до 500 000 руб.`);
+  });
+  return items;
+}
+
+// ---------- Мотивация (встроена в блок 5) ----------
+function motivationApplicable(){
+  const ps = getProducts();
+  return ps.includes('Кредит') || ps.includes('Рассрочка');
+}
+function motivationAvgTerm(){
+  const ps = getProducts();
+  const parts = [];
+  if(ps.includes('Кредит')) parts.push(12);
+  if(ps.includes('Рассрочка') && state.term.size) parts.push(...[...state.term].map(Number));
+  if(!parts.length) return 12;
+  return Math.round(parts.reduce((a,b)=>a+b,0)/parts.length);
+}
+function updateMotivationVisibility(){
+  const selected = state.staff.has('p_motivation');
+  $('motivationInner').style.display = selected ? 'block' : 'none';
+  if(!selected) return;
+  const applicable = motivationApplicable();
+  $('motivationUnavailable').style.display = applicable ? 'none' : 'block';
+  $('motivationControls').style.display = applicable ? 'block' : 'none';
+  if(!applicable) return;
+  $('motivationRateBlock').style.display = state.motivationType ? 'block' : 'none';
+  $('insuranceBlock').style.display = state.motivationAddon.has('insurance') ? 'block' : 'none';
+  $('smsBlock').style.display = state.motivationAddon.has('sms') ? 'block' : 'none';
+  $('avgTermDisplay').textContent = motivationAvgTerm() + ' мес.';
+}
+
+// Ставка вознаграждения = ставка% × средний чек.
+// Страхование: стоимость = (%/мес.) × средний срок × средний чек; вознаграждение партнёру = стоимость × % вознаграждения.
+// Push-SMS: разовая стоимость за продажу SMS, прибавляется как есть (без умножения на срок и без ставки КВ/АВ).
+function motivationExample(){
+  if(!state.staff.has('p_motivation') || !motivationApplicable() || !state.motivationType) return null;
+  const term = motivationAvgTerm();
+  const pct = Number($('motivationRate').value);
+  const checkAmount = 100000;
+  const base = checkAmount * pct/100;
+
+  let sms = 0, smsPrice = 0;
+  if(state.motivationAddon.has('sms') && state.smsPrice){
+    smsPrice = Number(state.smsPrice);
+    sms = smsPrice;
+  }
+
+  let insCost=0, insReward=0, insCostPct=0, insRewardPct=0;
+  if(state.motivationAddon.has('insurance')){
+    insCostPct = Number($('insuranceCost').value);
+    insRewardPct = Number($('insuranceReward').value);
+    insCost = (insCostPct/100) * checkAmount * term;
+    insReward = insCost * (insRewardPct/100);
+  }
+  const total = base + sms + insReward;
+
+  let scaled = null;
+  const turnoverStr = val('creditTurnover');
+  if(turnoverStr){
+    const turnover = Number(turnoverStr);
+    if(turnover>0){
+      const salesCount = turnover/checkAmount;
+      scaled = { turnover, salesCount, total: total*salesCount };
+    }
+  }
+  return {term, pct, checkAmount, base, sms, smsPrice, insCost, insReward, insCostPct, insRewardPct, total, scaled,
+    typeLabel: state.motivationType==='AB' ? 'АВ' : 'КВ на РС'};
+}
+
+// ---------- инлайн-рендер (общий для превью / .eml / копирования) ----------
+function sectionHTML(title, innerHtml){
+  if(!innerHtml) return '';
+  return `<div style="margin-bottom:22px"><div style="font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:${C.muted};font-weight:600;margin:0 0 10px;border-bottom:1px solid ${C.border};padding-bottom:6px">${esc(title)}</div>${innerHtml}</div>`;
+}
+function cardsHTML(cards){
+  if(!cards || !cards.length) return '';
+  if(cards.length>3){ let out=''; for(let i=0;i<cards.length;i+=3) out += cardsHTML(cards.slice(i,i+3)); return out; }
+  const cells = cards.map(c=>`<td style="padding:0 10px 10px 0"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="background:${C.gray};border:1px solid ${C.border};border-radius:10px;padding:8px 14px"><div style="font-size:11px;color:${C.muted};margin-bottom:2px">${esc(c.k)}</div><div style="font-size:15px;font-weight:600;color:${C.text}">${esc(c.v)}</div></td></tr></table></td>`).join('');
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>${cells}</tr></table>`;
+}
+function noteHTML(text){ return `<div style="background:${C.noteBg};border-left:3px solid ${C.yellow};padding:10px 14px;border-radius:6px;font-size:13px;color:#555;margin-top:10px">${text}</div>`; }
+function calcHTML(text){ return `<div style="background:${C.gray};border-radius:8px;padding:10px 14px;font-size:13px;color:#444;line-height:1.6;margin-top:10px">${text}</div>`; }
+function captionHTML(text){ return `<div style="font-size:12px;color:#777;margin-top:10px">${text}</div>`; }
+function rowListHTML(items){
+  const rows = items.map((it,i)=>{
+    const bb = i===items.length-1 ? '' : `border-bottom:1px solid #f0f0f0;`;
+    return `<tr><td style="padding:8px 0;${bb}font-size:14px;color:${C.text}">${it}</td></tr>`;
+  }).join('');
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${rows}</table>`;
+}
+function commissionTableHTML(table){
+  const th = s=>`<th style="background:${C.gray};text-align:left;padding:8px 10px;font-weight:600;border-bottom:1.5px solid ${C.border}">${s}</th>`;
+  const rows = table.map(row=>{
+    const commissionRub = Math.round(row.pct/100*100000);
+    const payout = 100000-commissionRub;
+    const td = s=>`<td style="padding:7px 10px;border-bottom:1px solid ${C.border}">${s}</td>`;
+    return `<tr>${td(row.months+' мес.')}${td(fmtPct(row.pct)+'%')}${td(esc(fmtMoney(commissionRub)))}${td(esc(fmtMoney(payout)))}</tr>`;
+  }).join('');
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-top:6px;font-size:13px">
+<tr>${th('Срок')}${th('Комиссия, %')}${th('Комиссия, руб.')}${th('Партнёр получит')}</tr>${rows}</table>`;
+}
+
+function productsPhrase(){
+  const ps = getProducts();
+  if(!ps.length) return '';
+  const parts = [];
+  if(ps.includes('Кредит') && ps.includes('Рассрочка')) parts.push('Рассрочке и Кредиту');
+  else if(ps.includes('Кредит')) parts.push('Кредиту');
+  else if(ps.includes('Рассрочка')) parts.push('Рассрочке');
+  if(ps.includes('Долями')) parts.push('Долями');
+  return parts.join(' и ');
+}
+function greetingHTML(){
+  const contact = val('contactName'), name = val('partnerName'), channel = state.commChannel;
+  const prod = productsPhrase();
+  const prodPhrase = prod ? ` по ${prod}` : '';
+  const co = name ? ` для <strong>${esc(name)}</strong>` : '';
+  const c = contact ? esc(contact) : '';
+  if(channel==='phone') return `${c?c+', ':''}в продолжение нашего разговора направляю условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
+  if(channel==='meeting') return `${c?c+', ':''}по итогам встречи направляю условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
+  return `Здравствуйте${c?', '+c:''}! Направляем условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
+}
+function greetingPlain(){
+  const contact = val('contactName'), name = val('partnerName'), channel = state.commChannel;
+  const prod = productsPhrase();
+  const prodPhrase = prod ? ` по ${prod}` : '';
+  const co = name ? ` для ${name}` : '';
+  if(channel==='phone') return `${contact?contact+', ':''}в продолжение нашего разговора направляю условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
+  if(channel==='meeting') return `${contact?contact+', ':''}по итогам встречи направляю условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
+  return `Здравствуйте${contact?', '+contact:''}! Направляем условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
+}
+
+// Топ-3 эффекта — данные T-Bank Data / Т-Банк Кредит Брокер (открытые источники tbank.ru)
+function effectsList(){
+  const ps = getProducts();
+  const items = [];
+  if(ps.includes('Кредит') || ps.includes('Рассрочка')){
+    items.push('Рост среднего чека — в среднем до 40% после подключения сервиса; при оплате в рассрочку чек почти втрое выше, чем при оплате картой.');
+    items.push('Рост конверсии — часть посетителей, которым покупка не по карману сразу, благодаря рассрочке и кредиту становится покупателями.');
+    items.push('Рост оборота и выручки — у партнёров сервиса встречается рост оборота в 2–4 раза в течение года после подключения.');
+  }
+  if(ps.includes('Долями')){
+    items.push('Долями снимает барьер «дорого» в момент оплаты: клиент платит частями, а бизнес получает всю сумму сразу.');
+  }
+  return items;
+}
+function effectsHTML(){
+  const items = effectsList();
+  if(!items.length) return '';
+  const rows = items.map(i=>`• ${esc(i)}`);
+  return `<div style="margin-bottom:20px"><div style="font-size:13px;color:#555;margin-bottom:6px">На что реально влияет этот инструмент:</div>${rowListHTML(rows)}</div>`;
+}
+
+function visualLinkHTML(url){
+  if(!url) return '';
+  return `<div style="font-size:13px;color:#555;margin-top:10px">📎 Как это выглядит: <a href="${esc(url)}" style="color:#8a7000;font-weight:600;text-decoration:none">смотреть визуал</a></div>`;
+}
+
+function productBlocksHTML(){
+  return getProductBlocks().map(b=>{
+    const cardsHtml = cardsHTML(b.cards);
+    const noteHtml = b.note ? noteHTML(esc(b.note)) : '';
+    let tableHtml = '';
+    if(b.table && b.table.length){
+      tableHtml = captionHTML('Комиссия по срокам рассрочки:') + commissionTableHTML(b.table) + captionHTML('* Расчёт на базе чека ≈100 000 руб.');
+    }
+    const visualHtml = visualLinkHTML(b.visual);
+    return sectionHTML(`Условия по продукту: ${b.name}`, cardsHtml + noteHtml + tableHtml + visualHtml);
+  }).join('');
+}
+
+function productsTeaserHTML(){
+  const url = landingUrlClean();
+  if(!url) return productBlocksHTML();
+  const blocks = getProductBlocks();
+  if(!blocks.length) return '';
+  const prod = productsPhrase();
+  const body = `<div style="font-size:14px;color:${C.text};margin-bottom:12px">Подготовили для вас индивидуальное предложение по ${esc(prod)} — полные условия на отдельной странице:</div>
+<div><a href="${esc(url)}" style="display:inline-block;background:${C.yellow};color:${C.text};font-weight:600;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:14px">Смотреть индивидуальные условия →</a></div>`;
+  return sectionHTML('Индивидуальное предложение', body);
+}
+function productsTeaserText(lines){
+  const url = landingUrlClean();
+  if(!url){
+    getProductBlocks().forEach(b=>{
+      lines.push(''); lines.push(`Условия по продукту «${b.name}»:`);
+      b.cards.forEach(c=>lines.push(`- ${c.k}: ${c.v}`));
+      if(b.note) lines.push('- '+b.note);
+      if(b.table && b.table.length){
+        lines.push('Комиссия по срокам рассрочки:');
+        lines.push('Срок, мес. | Комиссия, % | Комиссия, руб. | Партнёр получит, руб.');
+        b.table.forEach(row=>{
+          const commissionRub = Math.round(row.pct/100*100000);
+          lines.push(`${row.months} мес. | ${fmtPct(row.pct)}% | ${fmtMoney(commissionRub)} | ${fmtMoney(100000-commissionRub)}`);
+        });
+        lines.push('* Расчёт на базе чека ≈100 000 руб.');
+      }
+      if(b.visual) lines.push(`Как это выглядит: ${b.visual}`);
+    });
+    return;
+  }
+  const blocks = getProductBlocks();
+  if(!blocks.length) return;
+  lines.push('');
+  lines.push(`Подготовили для вас индивидуальное предложение по ${productsPhrase()} — полные условия здесь: ${url}`);
+}
+
+function techLinkSuffix(key){
+  const ctxs = activeLinkContexts();
+  const parts = [];
+  ctxs.forEach(ctx=>{
+    const url = LINKS[ctx][key];
+    if(url) parts.push(`<a href="${esc(url)}" style="color:#8a7000;font-weight:600;text-decoration:none">гайд${ctxs.length>1?' ('+esc(techContextLabel(ctx))+')':''}</a>`);
+  });
+  return parts.length ? ' — ' + parts.join(', ') : '';
+}
+function dealSummaryHTML(){
+  const items = [];
+  agreedTermsList().forEach(t=>items.push(esc(t)));
+  [...state.tech].forEach(id=>items.push(`${TECH_AGREEMENT[id]}${techLinkSuffix(TECH_KEY[id])}.`));
+  [...state.mkt].forEach(id=>{
+    const key = MKT_KEY[id];
+    const url = key ? link(key) : '';
+    const linkHtml = url ? ` — <a href="${esc(url)}" style="color:#8a7000;font-weight:600;text-decoration:none">материалы</a>` : '';
+    items.push(`${MKT_AGREEMENT[id]}${linkHtml}.`);
+  });
+  if(!items.length) return '';
+  return sectionHTML('О чём договорились', rowListHTML(items));
+}
+
+function motivationBlockHTML(){
+  const ex = motivationExample();
+  if(!ex){
+    if(!motivationApplicable()) return `<div style="padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:14px;color:${C.text}">Мотивационная акция для персонала — программа обсуждается отдельно для «Кредита»/«Рассрочки».</div>`;
+    return `<div style="padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:14px;color:${C.text}">Мотивационная акция для персонала — параметры уточняются.</div>`;
+  }
+  const cards = [{k:'Тип', v: ex.typeLabel}, {k:'Ставка', v: fmtPct(ex.pct)+'%'}, {k:'Средний срок', v: ex.term+' мес.'}];
+  if(state.motivationAddon.has('insurance')) cards.push({k:'Страхование', v: `${fmtPct(ex.insCostPct)}%/мес. · возн. ${fmtPct(ex.insRewardPct)}%`});
+  if(state.motivationAddon.has('sms') && ex.smsPrice) cards.push({k:'Push-SMS', v: fmtMoney(ex.smsPrice)});
+
+  const calcParts = [`${esc(ex.typeLabel)} ≈ <strong>${esc(fmtMoney(Math.round(ex.base)))}</strong>`];
+  if(ex.sms) calcParts.push(`Push-SMS ≈ <strong>${esc(fmtMoney(Math.round(ex.sms)))}</strong>`);
+  if(ex.insReward) calcParts.push(`страхование ≈ <strong>${esc(fmtMoney(Math.round(ex.insReward)))}</strong>`);
+  let calc = `Пример на одной продаже (чек ${esc(fmtMoney(ex.checkAmount))}, срок ${ex.term} мес.): ${calcParts.join(', ')} Итого ≈ <strong>${esc(fmtMoney(Math.round(ex.total)))}</strong> с одной продажи.`;
+  if(ex.scaled){
+    calc += `<br><br>При кредитном обороте ${esc(fmtMoney(ex.scaled.turnover))}/мес. (≈ ${Math.round(ex.scaled.salesCount)} продаж по среднему чеку ${esc(fmtMoney(ex.checkAmount))}) — вознаграждение партнёра ≈ <strong>${esc(fmtMoney(Math.round(ex.scaled.total)))}</strong>/мес.`;
+  }
+  return `<div style="padding:10px 0;border-bottom:1px solid #f0f0f0"><div style="font-size:14px;font-weight:600;color:${C.text};margin-bottom:8px">Мотивационная акция для персонала</div>${cardsHTML(cards)}${noteHTML(calc)}</div>`;
+}
+
+function staffSectionHTML(){
+  if(!state.staff.size) return '';
+  const parts = [];
+  ['p_training','p_motivation','p_cofin','p_merch'].forEach(id=>{
+    if(!state.staff.has(id)) return;
+    if(id==='p_motivation'){ parts.push(motivationBlockHTML()); return; }
+    const pair = STAFF_MAP[id]; const label = pair[0]; const lk = pair[1];
+    const url = lk ? link(lk) : '';
+    const linkHtml = url ? ` — <a href="${esc(url)}" style="color:#8a7000;font-weight:600;text-decoration:none">подробнее</a>` : '';
+    parts.push(`<div style="padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:14px;color:${C.text}">${esc(label)}${linkHtml}</div>`);
+  });
+  return sectionHTML('Работа с персоналом партнёра', parts.join(''));
+}
+
+function deadlineDate(){
+  const d = new Date(); d.setDate(d.getDate()+7);
+  return d.toLocaleDateString('ru-RU', {day:'numeric', month:'long'});
+}
+function deadlineHTML(){
+  if(!getProducts().length) return '';
+  return calcHTML(`Фиксируем условия на 7 дней — ждём обратную связь до <strong>${esc(deadlineDate())}</strong>. Это гарантирует, что все параметры предложения останутся именно такими, как согласовано.`);
+}
+
+function buildLetterHTML(){
+  const greeting = `<div style="font-size:14px;font-weight:500;color:${C.text};margin-bottom:20px">${greetingHTML()}</div>`;
+  const eff = effectsHTML();
+  const products = productsTeaserHTML();
+  const deal = dealSummaryHTML();
+  const staff = staffSectionHTML();
+  const deadline = deadlineHTML();
+  const sign = `<div style="margin-top:22px;color:#444">Будем рады ответить на любые вопросы.<br><br>С уважением,<br><strong>Т-Банк</strong></div>`;
+  return greeting + eff + products + deal + staff + deadline + sign;
+}
+
+function buildLetter(){
+  const lines = [];
+  lines.push(greetingPlain());
+  const eff = effectsList();
+  if(eff.length){ lines.push(''); lines.push('На что реально влияет этот инструмент:'); eff.forEach(i=>lines.push('- '+i)); }
+
+  productsTeaserText(lines);
+
+  const dealItems = [];
+  agreedTermsList().forEach(t=>dealItems.push(t));
+  [...state.tech].forEach(id=>{
+    const ctxs = activeLinkContexts();
+    const urls = ctxs.map(ctx=>LINKS[ctx][TECH_KEY[id]]).filter(Boolean);
+    dealItems.push(`${TECH_AGREEMENT[id]}${urls.length?' — '+urls.join(', '):''}.`);
+  });
+  [...state.mkt].forEach(id=>{
+    const key = MKT_KEY[id]; const url = key ? link(key) : '';
+    dealItems.push(`${MKT_AGREEMENT[id]}${url?' — '+url:''}.`);
+  });
+  if(dealItems.length){ lines.push(''); lines.push('О чём договорились:'); dealItems.forEach(i=>lines.push('- '+i)); }
+
+  if(state.staff.size){
+    lines.push(''); lines.push('Работа с персоналом партнёра:');
+    ['p_training','p_motivation','p_cofin','p_merch'].forEach(id=>{
+      if(!state.staff.has(id)) return;
+      if(id==='p_motivation'){
+        const ex = motivationExample();
+        if(ex){
+          lines.push(`- Мотивационная акция для персонала: ${ex.typeLabel}, ставка ${fmtPct(ex.pct)}%, средний срок ${ex.term} мес.`);
+          let calc = `Пример на одной продаже (чек ${fmtMoney(ex.checkAmount)}): ${ex.typeLabel} ≈ ${fmtMoney(Math.round(ex.base))}`;
+          if(ex.sms) calc += `, Push-SMS ≈ ${fmtMoney(Math.round(ex.sms))}`;
+          if(ex.insReward) calc += `, страхование ≈ ${fmtMoney(Math.round(ex.insReward))}`;
+          calc += ` Итого ≈ ${fmtMoney(Math.round(ex.total))} с одной продажи.`;
+          lines.push(calc);
+          if(ex.scaled) lines.push(`При обороте ${fmtMoney(ex.scaled.turnover)}/мес. — вознаграждение партнёра ≈ ${fmtMoney(Math.round(ex.scaled.total))}/мес.`);
+        } else {
+          lines.push('- Мотивационная акция для персонала: параметры уточняются.');
+        }
+      } else {
+        const pair = STAFF_MAP[id]; const url = pair[1] ? link(pair[1]) : '';
+        lines.push(`- ${pair[0]}${url?': '+url:''}`);
+      }
+    });
+  }
+
+  if(getProducts().length){
+    lines.push('');
+    lines.push(`Фиксируем условия на 7 дней — ждём обратную связь до ${deadlineDate()}. Это гарантирует, что все параметры предложения останутся именно такими, как согласовано.`);
+  }
+  lines.push(''); lines.push('Будем рады ответить на любые вопросы.'); lines.push('');
+  lines.push('С уважением,'); lines.push('Т-Банк');
+  return lines.join('\n');
+}
+
+// ================= ЛЕНДИНГ С ИНДИВИДУАЛЬНЫМИ УСЛОВИЯМИ =================
+// Отдельная самостоятельная HTML-страница в стилистике tbank.ru.
+// Вместо кнопки «Подключить» — таблица индивидуальных условий,
+// вместо формы заявки — таймер и контакты менеджера.
+
+// Реальные ссылки с сайта tbank.ru, используемые на лендинге
+const LANDING_LINKS = {
+  partners:  'https://www.tbank.ru/loans/pos-loans/',
+  research:  'https://www.tbank.ru/business/blog/tcb-research/',
+  online:    'https://www.tbank.ru/business/loans/online/',
+  offline:   'https://www.tbank.ru/business/loans/offline/',
+  cases:     'https://secrets.tbank.ru/lichnyj-opyt/cases/',
+  dolyame:   'https://www.tbank.ru/dolyame/business/',
+};
+
+function landingVariant(){
+  const ps = getProducts();
+  if(ps.includes('Долями') && !ps.includes('Кредит') && !ps.includes('Рассрочка')) return 'dolyame';
+  return 'lending';
+}
+
+// ---- минимальные инлайн-SVG иконки (без внешних картинок) ----
+const LICON = {
+  percent: `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>`,
+  nofee: `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M7 15h3"/></svg>`,
+  people: `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.3"/><path d="M15.5 14.2c2.4.3 4.2 2.4 4.2 4.8"/></svg>`,
+  doc: `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.5 13h5M9.5 16.5h5"/></svg>`,
+  check: `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`,
+  button: `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="7" rx="3.5"/><path d="M8 12.5h0"/></svg>`,
+  api: `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 12l4 9M16 3l4 9-4 9"/></svg>`,
+  module: `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>`,
+};
+
+// ---- хедер: только логотип ----
+function landingHeader(){
+  return `<header style="max-width:1120px;margin:0 auto;padding:22px 24px">
+    <div style="width:40px;height:40px;background:#FFDD2D;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#333">Т</div>
+  </header>`;
+}
+
+// ---- герой: заголовок + условия (вместо кнопки «Подключить») + таймер ----
+function landingHero(variant, name, deadline){
+  const eyebrow = variant==='dolyame' ? 'Оплата частями' : 'Кредитование покупателей';
+  const h1 = variant==='dolyame' ? 'Долями для ваших покупателей' : 'Рассрочки и кредиты для ваших покупателей';
+  const sub1 = `Индивидуальное предложение для «${esc(name)}»`;
+  const sub2 = variant==='dolyame'
+    ? 'Покупатель платит частями, а вы получаете всю сумму сразу'
+    : 'Максимальная сумма кредита или рассрочки для покупателей — 500 000 ₽';
+
+  const conditions = variant==='dolyame'
+    ? landingDolyameConditionsCard()
+    : landingConditionsCard();
+
+  return `<section style="max-width:1120px;margin:0 auto;padding:10px 24px 50px">
+    <p style="color:#6B7280;font-size:14px;margin:0 0 10px;font-weight:600">${esc(eyebrow)}</p>
+    <h1 style="font-size:44px;line-height:1.15;font-weight:800;margin:0 0 18px;max-width:760px">${esc(h1)}</h1>
+    <p style="font-size:17px;color:#333;margin:0 0 6px;font-weight:600">${sub1}</p>
+    <p style="font-size:15px;color:#6B7280;margin:0 0 30px">${esc(sub2)}</p>
+    ${conditions}
+    ${landingTimerBlock(deadline, 'hero')}
+  </section>`;
+}
+
+function landingConditionsCard(){
+  return `<div style="background:#fff;border-radius:12px;padding:8px 28px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:28px;max-width:760px">
+    ${landingConditionsInner()}
+  </div>`;
+}
+function landingDolyameConditionsCard(){
+  const fee = fmtPct($('bnplFee').value)+'%';
+  const rows = [['Комиссия',fee],['Лимит','1 000–500 000 ₽'],['Сроки','6 недель, 3, 6, 10 мес.']];
+  const trs = rows.map(([k,v])=>`<tr><td style="padding:14px 4px;color:#6B7280;font-size:14px;border-bottom:1px solid #EEF0F2">${k}</td><td style="padding:14px 4px;font-weight:700;font-size:15px;text-align:right;border-bottom:1px solid #EEF0F2">${v}</td></tr>`).join('');
+  return `<div style="background:#fff;border-radius:12px;padding:8px 28px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:28px;max-width:500px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${trs}</table>
+  </div>`;
+}
+
+// ---- таймер (используется в нескольких местах; каждый со своим набором id) ----
+let LANDING_TIMER_COUNT = 0;
+function landingTimerBlock(deadline, idSuffix){
+  return `<div style="display:inline-flex;align-items:center;gap:14px;background:#F6F7F8;border-radius:12px;padding:14px 20px;flex-wrap:wrap">
+    <span style="font-size:14px;color:#333;font-weight:600">Предложение действует до ${esc(deadline)}:</span>
+    <span style="display:flex;gap:6px" id="cd-${idSuffix}">
+      <span class="digit" data-u="d">—</span><span class="digit" data-u="h">—</span><span class="digit" data-u="m">—</span><span class="digit" data-u="s">—</span>
+    </span>
+  </div>`;
+}
+
+// ---- 4 карточки преимуществ ----
+function landingAdvantages(variant){
+  const items = variant==='dolyame' ? [
+    [LICON.percent,'Лимит до 500 000 ₽','На одну покупку покупателя'],
+    [LICON.nofee,'Без комиссии за эквайринг','Не платите за приём платежей через Долями — Т-Банк не берёт комиссию за эквайринг'],
+    [LICON.people,'Трафик из приложения Т-Банка',`Продвигаем партнёров среди аудитории Т-Банка — 25+ млн клиентов. <a href="${LANDING_LINKS.dolyame}" style="color:#8a7000;font-weight:600;text-decoration:none">Подробнее</a>`],
+    [LICON.doc,'Минимум документов от покупателей','Клиенту нужен только паспорт и телефон. Решение — за 1–2 минуты'],
+  ] : [
+    [LICON.percent,'Максимальная сумма — 500 000 ₽','На одного покупателя за один платёж'],
+    [LICON.nofee,'Без комиссии за платежи через эквайринг','На счёт в Т-Банке вся сумма приходит в тот же день, когда клиент подписал договор'],
+    [LICON.people,'Помощь в привлечении клиентов',`Разместим информацию о вашем бизнесе <a href="${LANDING_LINKS.partners}" style="color:#8a7000;font-weight:600;text-decoration:none">на странице партнёров Рассрочки в Т-Банке</a>`],
+    [LICON.doc,'Минимум документов от покупателей','Решение по заявке — до 2 минут, покупатели не уйдут из-за долгого ожидания'],
+  ];
+  const cards = items.map(([icon,title,text])=>`<div class="adv-card" style="background:#fff;border-radius:12px;padding:24px 22px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+    <div style="margin-bottom:14px">${icon}</div>
+    <div style="font-weight:700;font-size:15px;margin-bottom:8px;color:#333">${esc(title)}</div>
+    <div style="font-size:13px;color:#6B7280;line-height:1.55">${text}</div>
+  </div>`).join('');
+  return `<section style="background:#F6F7F8;padding:50px 24px">
+    <div style="max-width:1120px;margin:0 auto">
+      <div class="grid-4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">${cards}</div>
+    </div>
+  </section>`;
+}
+
+// ---- «Подходит бизнесу из разных сфер» + баннер спецпредложения с таймером ----
+function landingBusinessSection(variant, name, deadline){
+  const heading = variant==='dolyame' ? 'Долями подходит бизнесу из разных сфер' : 'Сервис рассрочек и кредитов подходит бизнесу из разных сфер';
+  const sub = variant==='dolyame' ? 'Подключаем Долями ИП и компаниям' : 'Подключаем Т-Рассрочку ИП и компаниям';
+  return `<section style="padding:60px 24px">
+    <div style="max-width:1120px;margin:0 auto">
+      <h2 style="font-size:28px;font-weight:800;margin:0 0 10px;text-align:center">${esc(heading)}</h2>
+      <p style="text-align:center;color:#6B7280;font-size:15px;margin:0 0 30px">${esc(sub)}</p>
+      <div class="grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:36px">
+        <div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <div style="background:#FBE9A8;height:120px"></div>
+          <div style="padding:20px 22px">
+            <div style="font-weight:700;font-size:16px;margin-bottom:8px">Онлайн-бизнес</div>
+            <div style="font-size:13px;color:#6B7280;margin-bottom:14px">Интернет-магазины, онлайн-услуги, продажи в мессенджерах и соцсетях</div>
+            <a href="${LANDING_LINKS.online}" style="display:inline-block;background:#FFDD2D;color:#333;font-weight:600;padding:9px 18px;border-radius:8px;text-decoration:none;font-size:14px;box-shadow:0 1px 3px rgba(0,0,0,.12)">Подробнее</a>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <div style="background:#FBE9A8;height:120px"></div>
+          <div style="padding:20px 22px">
+            <div style="font-weight:700;font-size:16px;margin-bottom:8px">Офлайн-бизнес</div>
+            <div style="font-size:13px;color:#6B7280;margin-bottom:14px">Магазины, клиники, фитнес-клубы, турагентства</div>
+            <a href="${LANDING_LINKS.offline}" style="display:inline-block;background:#FFDD2D;color:#333;font-weight:600;padding:9px 18px;border-radius:8px;text-decoration:none;font-size:14px;box-shadow:0 1px 3px rgba(0,0,0,.12)">Подробнее</a>
+          </div>
+        </div>
+      </div>
+      <div style="background:#333;border-radius:12px;padding:28px 30px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+        <div>
+          <div style="color:#fff;font-weight:700;font-size:17px;margin-bottom:4px">Специальное предложение для «${esc(name)}»</div>
+          <div style="color:#C9CDD3;font-size:13px">Успей подключить по выгодным условиям</div>
+        </div>
+        ${landingTimerBlock(deadline, 'mid')}
+      </div>
+    </div>
+  </section>`;
+}
+
+// ---- интеграция без разработки: 3 кликабельные карточки на реальные ссылки ----
+function landingIntegration(variant){
+  const L = variant==='dolyame' ? LANDING_LINKS_DOLY_TECH() : LANDING_LINKS_POS_TECH();
+  const items = [
+    [LICON.button, 'Кнопка на сайте', L.button],
+    [LICON.api, 'API', L.api],
+    [LICON.module, 'Готовые модули для популярных систем', L.widget],
+  ];
+  const cards = items.map(([icon,title,url])=>`<a href="${esc(url)}" target="_blank" rel="noopener" style="background:#fff;border-radius:12px;padding:26px 22px;box-shadow:0 1px 3px rgba(0,0,0,.08);text-decoration:none;color:inherit;display:block">
+    <div style="margin-bottom:14px">${icon}</div>
+    <div style="font-weight:700;font-size:15px;color:#333">${esc(title)}</div>
+    <div style="font-size:13px;color:#8a7000;font-weight:600;margin-top:8px">Открыть гайд →</div>
+  </a>`).join('');
+  return `<section style="background:#F6F7F8;padding:60px 24px">
+    <div style="max-width:1120px;margin:0 auto;text-align:center">
+      <h2 style="font-size:28px;font-weight:800;margin:0 0 30px">Интегрируйте сервис кредитования и рассрочек без разработки</h2>
+      <div class="grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:left">${cards}</div>
+    </div>
+  </section>`;
+}
+function LANDING_LINKS_POS_TECH(){ return LINKS.posLending; }
+function LANDING_LINKS_DOLY_TECH(){ return LINKS.dolyame; }
+
+// ---- партнёры: статистика ----
+function landingPartnersStats(variant){
+  const stats = variant==='dolyame'
+    ? [['33 000+','партнёров'],['+81%','средний чек'],['100%','суммы сразу'],['1–2 мин','решение по заявке']]
+    : [['200 000+','компаний'],['+38%','средний чек'],['×4','оборот'],['×2','выручка']];
+  const tiles = stats.map(([n,l])=>`<div style="text-align:center">
+    <div style="font-size:32px;font-weight:800;color:#333">${esc(n)}</div>
+    <div style="font-size:13px;color:#6B7280;margin-top:4px">${esc(l)}</div>
+  </div>`).join('');
+  const heading = variant==='dolyame' ? 'Присоединяйтесь к партнёрам «Долями»' : 'Присоединяйтесь к партнёрам';
+  return `<section style="padding:60px 24px">
+    <div style="max-width:1120px;margin:0 auto;text-align:center">
+      <h2 style="font-size:28px;font-weight:800;margin:0 0 30px">${esc(heading)}</h2>
+      <div class="grid-4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">${tiles}</div>
+    </div>
+  </section>`;
+}
+
+// ---- FAQ-аккордеон ----
+function landingFaq(variant){
+  const items = variant==='dolyame' ? [
+    ['Что такое Долями?','Сервис оплаты частями: покупатель платит в несколько платежей, а вы получаете всю сумму сразу на счёт в Т-Банке.'],
+    ['Берёте ли вы комиссию?','Комиссия по вашим индивидуальным условиям указана в таблице выше. За приём платежей через эквайринг Т-Банка дополнительной комиссии нет.'],
+    ['Какой лимит на одну покупку?','От 1 000 до 500 000 ₽.'],
+    ['Нужно ли разрабатывать интеграцию самостоятельно?','Нет — подключается кнопкой на сайте, по API или готовым модулем для популярных платформ, без разработки с нуля.'],
+    ['Как быстро покупатель получает решение?','Решение по оплате занимает 1–2 минуты.'],
+    ['Сколько сейчас партнёров у Долями?','Более 33 000 партнёров по всей стране.'],
+  ] : [
+    ['Что нужно покупателю для оформления рассрочки или кредита?','Только паспорт и номер телефона — специальных документов о доходах не требуется.'],
+    ['Сколько рассматривается заявка?','Решение приходит за 1–2 минуты. Заявку одновременно отправляем в 9 банков — если один откажет, может одобрить другой.'],
+    ['Когда деньги поступят на счёт?','В тот же день, когда покупатель подписал договор — вы получаете всю сумму сразу, а риск неплатежа клиента берёт на себя банк.'],
+    ['Берёте ли вы комиссию за эквайринг?','Нет, при продажах в рассрочку или кредит комиссия за платежи через эквайринг Т-Банка не взимается.'],
+    ['Какая максимальная сумма рассрочки или кредита?','До 500 000 ₽ на одного покупателя.'],
+    ['Можно ли подключить и Долями, и Рассрочку одновременно?','Да, оба сервиса подключаются к одной платёжной форме — покупатель сам выбирает удобный способ оплаты.'],
+  ];
+  const rows = items.map((pair,i)=>`<div class="faq-item" style="border-bottom:1px solid #E5E7EB">
+    <button type="button" class="faq-q" onclick="toggleFaq(this)" style="width:100%;text-align:left;background:none;border:none;padding:18px 4px;font-size:15px;font-weight:600;color:#333;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:inherit">
+      <span>${esc(pair[0])}</span><span class="faq-ic" style="font-size:20px;font-weight:400;color:#6B7280">+</span>
+    </button>
+    <div class="faq-a" style="display:none;padding:0 4px 18px;font-size:14px;color:#6B7280;line-height:1.6">${esc(pair[1])}</div>
+  </div>`).join('');
+  return `<section style="padding:60px 24px">
+    <div style="max-width:720px;margin:0 auto">
+      <h2 style="font-size:28px;font-weight:800;margin:0 0 30px;text-align:center">Частые вопросы</h2>
+      ${rows}
+    </div>
+  </section>`;
+}
+
+function landingConditionsInner(){
+  const blocks = getProductBlocks();
+  const P = { text:'#1A1A1A', muted:'#8C8378', border:'#E3DCCE', gray:'#F7F4EC' };
+  const rows = [];
+  blocks.forEach(b=>{
+    if(b.name==='Рассрочка' && b.table && b.table.length){
+      const trs = b.table.map(row=>{
+        const commissionRub = Math.round(row.pct/100*100000);
+        const payout = 100000-commissionRub;
+        return `<tr><td style="padding:12px 16px;border-bottom:1px solid ${P.border};font-size:15px">${row.months} мес.</td><td style="padding:12px 16px;border-bottom:1px solid ${P.border};font-size:15px">${fmtPct(row.pct)}%</td><td style="padding:12px 16px;border-bottom:1px solid ${P.border};font-size:15px">${esc(fmtMoney(commissionRub))}</td><td style="padding:12px 16px;border-bottom:1px solid ${P.border};font-size:15px;font-weight:600">${esc(fmtMoney(payout))}</td></tr>`;
+      }).join('');
+      rows.push(`<div style="margin-bottom:24px">
+        <div style="font-weight:600;font-size:17px;margin-bottom:10px;color:${P.text}">Рассрочка</div>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden;border:1px solid ${P.border}">
+        <tr style="background:${P.gray}"><th style="text-align:left;padding:12px 16px;font-size:13px;color:${P.muted};font-weight:600">Срок</th><th style="text-align:left;padding:12px 16px;font-size:13px;color:${P.muted};font-weight:600">Комиссия</th><th style="text-align:left;padding:12px 16px;font-size:13px;color:${P.muted};font-weight:600">Комиссия, ₽</th><th style="text-align:left;padding:12px 16px;font-size:13px;color:${P.muted};font-weight:600">Вы получите</th></tr>
+        ${trs}</table>
+        <div style="font-size:12px;color:${P.muted};margin-top:8px">* Расчёт на базе чека ≈100 000 ₽, без первоначального взноса</div>
+      </div>`);
+    } else if(b.name==='Кредит'){
+      rows.push(`<div style="margin-bottom:24px"><div style="font-weight:600;font-size:17px;margin-bottom:10px;color:${P.text}">Кредит</div>
+        <div style="background:#fff;border:1px solid ${P.border};border-radius:16px;padding:18px 20px;font-size:15px;color:${P.text}">Ставка от 14% до 32% годовых — зависит от профиля клиента, без первоначального взноса.</div></div>`);
+    } else if(b.name==='Долями'){
+      const cardsRow = b.cards.map(c=>`<div style="background:#fff;border:1px solid ${P.border};border-radius:14px;padding:14px 18px;min-width:140px"><div style="font-size:12px;color:${P.muted};margin-bottom:4px">${esc(c.k)}</div><div style="font-size:18px;font-weight:700;color:${P.text}">${esc(c.v)}</div></div>`).join('');
+      rows.push(`<div style="margin-bottom:24px"><div style="font-weight:600;font-size:17px;margin-bottom:10px;color:${P.text}">Долями</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">${cardsRow}</div></div>`);
+    }
+  });
+  return rows.join('');
+}
+
+function landingDolyameHero(name, deadline){
+  const P = { text:'#1A1A1A', muted:'#8C8378' };
+  const fee = fmtPct($('bnplFee').value)+'%';
+  return `
+  <div style="display:flex;align-items:center;gap:40px;flex-wrap:wrap;margin:40px 0 50px">
+    <div style="flex:1;min-width:280px">
+      <div style="font-weight:600;font-size:18px;margin-bottom:6px">Растите продажи на выгодных условиях</div>
+      <div style="color:${P.muted};font-size:15px;line-height:1.6;margin-bottom:16px">Покупатель платит частями, а вы получаете всю сумму сразу. Индивидуальная комиссия закреплена для «${esc(name)}» до ${esc(deadline)}.</div>
+      <ul style="margin:0;padding-left:18px;color:${P.text};font-size:15px;line-height:2">
+        <li>Индивидуальная комиссия: <strong>${fee}</strong></li>
+        <li>Лимит: <strong>1 000–500 000 ₽</strong></li>
+        <li>Сроки: <strong>6 недель, 3, 6, 10 мес.</strong></li>
+        <li>Действует до <strong>${esc(deadline)}</strong></li>
+      </ul>
+    </div>
+    <div style="position:relative;width:260px;height:220px;flex-shrink:0">
+      <div style="position:absolute;inset:30px 10px;background:#DCEBFA;border-radius:28px;transform:rotate(-6deg)"></div>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:120px;font-weight:800;color:#B9B9B9;line-height:1">%</div>
+      <div style="position:absolute;top:10px;right:0;background:#F7D6E6;color:#6B2545;font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px">скидка</div>
+      <div style="position:absolute;bottom:10px;left:0;background:#F7D6E6;color:#6B2545;font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px">до ${esc(deadline)}</div>
+    </div>
+  </div>`;
+}
+
+function buildLandingPageHTML(){
+  const variant = landingVariant();
+  const name = val('partnerName') || 'вашего бизнеса';
+  const manager = val('managerName');
+  const phone = val('managerPhone');
+  const email = val('managerEmail');
+  const deadline = deadlineDate();
+  const deadlineTs = Date.now() + 7*24*60*60*1000;
+  const title = variant==='dolyame' ? `Долями для «${name}»` : `Рассрочки и кредиты для «${name}»`;
+
+  const header = landingHeader();
+  const hero = landingHero(variant, name, deadline);
+  const advantages = landingAdvantages(variant);
+  const business = landingBusinessSection(variant, name, deadline);
+  const integration = landingIntegration(variant);
+  const partners = landingPartnersStats(variant);
+  const faq = landingFaq(variant);
+
+  const contactRows = [];
+  if(manager) contactRows.push(`<div style="font-size:15px;color:#333"><strong>${esc(manager)}</strong></div>`);
+  if(phone) contactRows.push(`<div style="font-size:14px"><a href="tel:${esc(phone.replace(/[^+\d]/g,''))}" style="color:#333;text-decoration:none">${esc(phone)}</a></div>`);
+  if(email) contactRows.push(`<div style="font-size:14px"><a href="mailto:${esc(email)}" style="color:#333;text-decoration:none">${esc(email)}</a></div>`);
+  const contactSection = contactRows.length ? `<section style="padding:0 24px 70px"><div style="max-width:720px;margin:0 auto;background:#F6F7F8;border-radius:12px;padding:26px 28px;text-align:center">
+    <div style="font-weight:700;font-size:16px;margin-bottom:10px">Остались вопросы? Свяжитесь с менеджером</div>
+    ${contactRows.join('')}
+  </div></section>` : '';
+
+  return `<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>${esc(title)}</title>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'TBankSans',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#fff;color:#333}
+h1,h2{font-weight:800}
+a{font-family:inherit}
+.digit{background:#333;color:#fff;border-radius:8px;padding:6px 9px;font-size:15px;font-weight:700;min-width:28px;text-align:center}
+.adv-card a{color:#8a7000}
+@media(max-width:1024px){
+  .grid-4{grid-template-columns:repeat(2,1fr) !important}
+}
+@media(max-width:768px){
+  h1{font-size:30px !important}
+  .grid-4{grid-template-columns:1fr !important}
+  .grid-3{grid-template-columns:1fr !important}
+  .grid-2{grid-template-columns:1fr !important}
+}
+</style>
+</head>
+<body>
+${header}
+${hero}
+${advantages}
+${business}
+${integration}
+${partners}
+${faq}
+${contactSection}
+<scr${''}ipt>
+(function(){
+  var deadline = ${deadlineTs};
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function tick(){
+    var diff = Math.max(0, deadline - Date.now());
+    var vals = {
+      d: diff>=0 ? Math.floor(diff/86400000) : 0,
+      h: pad(Math.floor((diff%86400000)/3600000)),
+      m: pad(Math.floor((diff%3600000)/60000)),
+      s: pad(Math.floor((diff%60000)/1000)),
+    };
+    document.querySelectorAll('[id^="cd-"]').forEach(function(wrap){
+      wrap.querySelectorAll('[data-u]').forEach(function(el){
+        el.textContent = vals[el.getAttribute('data-u')];
+      });
+    });
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  window.toggleFaq = function(btn){
+    var item = btn.parentElement;
+    var answer = item.querySelector('.faq-a');
+    var ic = btn.querySelector('.faq-ic');
+    var open = answer.style.display === 'block';
+    answer.style.display = open ? 'none' : 'block';
+    ic.textContent = open ? '+' : '−';
+  };
+})();
+<\/scr${''}ipt>
+</body>
+</html>`;
+}
+
+function subjectLine(){
+  const name = val('partnerName') || 'вашего бизнеса';
+  const ps = getProducts();
+  const hasLending = ps.includes('Кредит') || ps.includes('Рассрочка');
+  const hasDolyame = ps.includes('Долями');
+  let productPart;
+  if(hasLending && hasDolyame) productPart = 'Рассрочка, кредит и Долями';
+  else if(hasDolyame) productPart = 'Оплата Долями';
+  else productPart = 'Рассрочка и кредит';
+  return `${productPart} от Т-Банка для бизнеса — предложение для «${name}»`;
+}
+
+function update(){
+  updateMotivationVisibility();
+  $('preview').innerHTML = buildLetterHTML();
+
+  const nameOk = !!val('partnerName');
+  $('partnerName').classList.toggle('err', !nameOk);
+  ['btnEml','btnCopy'].forEach(id=>{$(id).disabled = !nameOk});
+
+  const ps = getProducts();
+  let filled = 0, total = 3;
+  if(val('partnerName')) filled++;
+  if(ps.length) filled++;
+  if(state.tech.size || state.mkt.size || state.staff.size) filled++;
+  $('progressBar').style.width = Math.round(filled/total*100)+'%';
+
+  saveDraft();
+}
+
+function saveDraft(){
+  const data = {
+    partnerName: val('partnerName'), contactName: val('contactName'), commChannel: state.commChannel,
+    products: getProducts(), bnplFee: $('bnplFee').value, creditRate: $('creditRate').value, installmentRate: $('installmentRate').value,
+    term: [...state.term], tech: [...state.tech], mkt: [...state.mkt], staff: [...state.staff],
+    motivationType: state.motivationType, motivationRate: $('motivationRate').value, motivationAddon: [...state.motivationAddon],
+    insuranceCost: $('insuranceCost').value, insuranceReward: $('insuranceReward').value, smsPrice: state.smsPrice,
+    creditTurnover: val('creditTurnover'),
+    managerName: val('managerName'), managerPhone: val('managerPhone'), managerEmail: val('managerEmail'), landingUrl: val('landingUrl'),
+  };
+  try{ localStorage.setItem('partnerLetterDraftV2', JSON.stringify(data)); }catch(e){}
+}
+function clearStoredDraft(){
+  try{ localStorage.removeItem('partnerLetterDraftV2'); localStorage.removeItem('partnerLetterDraft'); }catch(e){}
+}
+function loadDraft(){
+  let raw = null;
+  try{ raw = localStorage.getItem('partnerLetterDraftV2'); }catch(e){}
+  if(!raw) return;
+  try{
+    const data = JSON.parse(raw);
+    if(data.partnerName) $('partnerName').value = data.partnerName;
+    if(data.contactName) $('contactName').value = data.contactName;
+    if(data.commChannel){ state.commChannel = data.commChannel; const el=document.querySelector(`#commGroup [data-val="${data.commChannel}"]`); if(el) el.classList.add('active'); }
+    if(data.bnplFee){ $('bnplFee').value = data.bnplFee; $('bnplFeeVal').textContent = fmtPct(data.bnplFee)+'%'; }
+    if(data.creditRate){ $('creditRate').value = data.creditRate; $('creditRateVal').textContent = data.creditRate+'%'; }
+    if(data.installmentRate){ $('installmentRate').value = data.installmentRate; $('installmentRateVal').textContent = data.installmentRate+'%'; }
+    if(Array.isArray(data.products)) data.products.forEach(p=>{ const b=document.querySelector(`#productGroup [data-val="${p}"]`); if(b) b.classList.add('active'); });
+    if(Array.isArray(data.term)) data.term.forEach(m=>{ if(!Number.isFinite(Number(m))) return; state.term.add(String(m)); const el=document.querySelector(`#termGroup [data-val="${m}"]`); if(el) el.classList.add('active'); });
+    if(Array.isArray(data.tech)) data.tech.forEach(id=>{ state.tech.add(id); const el=document.querySelector(`#techGroup [data-id="${id}"]`); if(el) el.classList.add('active'); });
+    if(Array.isArray(data.mkt)) data.mkt.forEach(id=>{ state.mkt.add(id); const el=document.querySelector(`#mktGroup [data-id="${id}"]`); if(el) el.classList.add('active'); });
+    if(Array.isArray(data.staff)) data.staff.forEach(id=>{ state.staff.add(id); const el=document.querySelector(`#staffGroup [data-id="${id}"]`); if(el) el.classList.add('active'); });
+    if(data.motivationType){ state.motivationType = data.motivationType; const el=document.querySelector(`#motivationTypeGroup [data-val="${data.motivationType}"]`); if(el) el.classList.add('active'); }
+    if(data.motivationRate){ $('motivationRate').value = data.motivationRate; $('motivationRateVal').textContent = fmtPct(data.motivationRate)+'%'; }
+    if(Array.isArray(data.motivationAddon)) data.motivationAddon.forEach(v=>{ state.motivationAddon.add(v); const el=document.querySelector(`#motivationAddonGroup [data-val="${v}"]`); if(el) el.classList.add('active'); });
+    if(data.insuranceCost){ $('insuranceCost').value = data.insuranceCost; $('insuranceCostVal').textContent = fmtPct(data.insuranceCost)+'%'; }
+    if(data.insuranceReward){ $('insuranceReward').value = data.insuranceReward; $('insuranceRewardVal').textContent = fmtPct(data.insuranceReward)+'%'; }
+    if(data.smsPrice){ state.smsPrice = data.smsPrice; const el=document.querySelector(`#smsPriceGroup [data-val="${data.smsPrice}"]`); if(el) el.classList.add('active'); }
+    if(data.creditTurnover) $('creditTurnover').value = data.creditTurnover;
+    if(data.managerName) $('managerName').value = data.managerName;
+    if(data.managerPhone) $('managerPhone').value = data.managerPhone;
+    if(data.managerEmail) $('managerEmail').value = data.managerEmail;
+    if(data.landingUrl) $('landingUrl').value = data.landingUrl; updateLandingUrlWarn();
+  }catch(e){}
+  updateProductVisibility();
+}
+
+function downloadTextFile(filename, content, mime){
+  try{
+    const blob = new Blob([content], {type:mime});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    return true;
+  }catch(e){
+    alert('Не удалось скачать файл в этом окне. Откройте страницу в отдельной вкладке браузера и повторите попытку.');
+    return false;
+  }
+}
+// --- .eml по стандарту: тема в RFC 2047, тело в base64 строками по 76 символов ---
+function utf8B64(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  for(let i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+function mimeSubject(str){
+  if(/^[\x20-\x7e]*$/.test(str)) return str;
+  const enc = new TextEncoder(), words = [];
+  let chunk = '', size = 0;
+  for(const ch of str){
+    const n = enc.encode(ch).length;
+    if(size + n > 42){ words.push(chunk); chunk = ''; size = 0; }
+    chunk += ch; size += n;
+  }
+  if(chunk) words.push(chunk);
+  return words.map(w=>'=?UTF-8?B?'+utf8B64(w)+'?=').join('\r\n ');
+}
+function mimeBody(str){
+  return utf8B64(str).replace(/(.{76})/g, '$1\r\n').replace(/\r\n$/, '');
+}
+function letterAsHtmlDoc(){
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="font-family:Arial,Helvetica,sans-serif;color:#333;max-width:640px;margin:0 auto;">${buildLetterHTML()}</body></html>`;
+}
+
+$('btnLanding').onclick = ()=>{
+  if(!getProducts().length){ alert('Сначала выберите хотя бы один продукт.'); return; }
+  if(getProducts().includes('Рассрочка') && !state.term.size){ alert('Для рассрочки выберите хотя бы один срок — без него на лендинге не будет таблицы комиссий.'); return; }
+  const html = buildLandingPageHTML();
+  downloadTextFile(`Лендинг_${val('partnerName')||'партнёр'}.html`, html, 'text/html;charset=utf-8');
+};
+
+$('btnEml').onclick = ()=>{
+  const eml = ['To: ', 'Subject: '+mimeSubject(subjectLine()), 'X-Unsent: 1', 'MIME-Version: 1.0',
+    'Content-Type: text/html; charset=utf-8', 'Content-Transfer-Encoding: base64', '', mimeBody(letterAsHtmlDoc()), ''].join('\r\n');
+  downloadTextFile(`Письмо_${val('partnerName')||'партнёр'}.eml`, eml, 'message/rfc822');
+};
+
+function copyToClipboard(){
+  const text = buildLetter(), html = letterAsHtmlDoc();
+  if(navigator.clipboard && window.ClipboardItem && navigator.clipboard.write){
+    try{
+      const item = new ClipboardItem({'text/plain': new Blob([text], {type:'text/plain'}), 'text/html': new Blob([html], {type:'text/html'})});
+      return navigator.clipboard.write([item]);
+    }catch(e){}
+  }
+  try{
+    const node = $('preview');
+    const range = document.createRange(); range.selectNodeContents(node);
+    const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    const ok = document.execCommand('copy'); sel.removeAllRanges();
+    if(ok) return Promise.resolve();
+  }catch(e){}
+  if(navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text);
+  return new Promise((resolve, reject)=>{
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      const ok = document.execCommand('copy'); ta.remove();
+      ok ? resolve() : reject(new Error('execCommand failed'));
+    }catch(e){ reject(e); }
+  });
+}
+$('btnCopy').onclick = ()=>{
+  copyToClipboard().then(()=>{
+    $('btnCopy').textContent = 'Скопировано!';
+    setTimeout(()=>{$('btnCopy').textContent='Скопировать письмо'},1500);
+  }).catch(()=>{
+    alert('Не удалось скопировать автоматически. Откройте файл в отдельной вкладке браузера и повторите попытку, либо используйте «Скачать .eml».');
+  });
+};
+
+$('btnChecklist').onclick = ()=>{
+  const items = [];
+  if(state.tech.size) items.push('Провести техническую интеграцию');
+  if(state.mkt.size) items.push('Запустить маркетинговые материалы');
+  if(state.staff.has('p_training')) items.push('Провести обучение сотрудников партнёра');
+  if(state.staff.has('p_motivation')) items.push('Настроить мотивационную программу для персонала');
+  if(state.staff.has('p_cofin')) items.push('Согласовать условия софинансирования');
+  if(state.staff.has('p_merch')) items.push('Организовать розыгрыш мерча / призов');
+  items.push(`Получить обратную связь от партнёра до ${deadlineDate()}`);
+  const text = `Чек-лист запуска: ${val('partnerName')||''}\n\n` + items.map(i=>'[ ] '+i).join('\n');
+  downloadTextFile(`Чеклист_${val('partnerName')||'партнёр'}.txt`, text, 'text/plain;charset=utf-8');
+};
+
+$('clearDraft').onclick = ()=>{
+  if(confirm('Очистить сохранённый черновик?')){ clearStoredDraft(); }
+};
+$('btnReset').onclick = ()=>{
+  if(confirm('Сбросить все поля формы?')){
+    $('partnerName').value=''; $('contactName').value='';
+    $('managerName').value=''; $('managerPhone').value=''; $('managerEmail').value=''; $('landingUrl').value=''; updateLandingUrlWarn();
+    $('bnplFee').value=5; $('bnplFeeVal').textContent='5%';
+    $('creditRate').value=20; $('creditRateVal').textContent='20%';
+    $('installmentRate').value=21; $('installmentRateVal').textContent='21%';
+    $('motivationRate').value=5; $('motivationRateVal').textContent='5%';
+    $('insuranceCost').value=0.5; $('insuranceCostVal').textContent='0,5%';
+    $('insuranceReward').value=50; $('insuranceRewardVal').textContent='50%';
+    $('creditTurnover').value='';
+    state = {term:new Set(), tech:new Set(), mkt:new Set(), staff:new Set(), motivationAddon:new Set(), commChannel:null, motivationType:null, smsPrice:null};
+    document.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('active'));
+    updateProductVisibility(); updateMotivationVisibility();
+    clearStoredDraft();
+    update();
+  }
+};
+
+loadDraft();
+updateProductVisibility();
+updateMotivationVisibility();
+update();
+</script>
+</body>
+</html>
