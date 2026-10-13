@@ -1265,7 +1265,7 @@ function landingHeader(variant){
   const mark = variant==='dolyame'
     ? `<img src="${IMG.dolLogo}" alt="Долями" style="height:24px;width:auto;display:block">`
     : `<div style="width:40px;height:40px;background:#FFDD2D;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#333">Т</div>`;
-  return `<header style="max-width:1120px;margin:0 auto;padding:22px 24px">${mark}</header>`;
+  return `<header style="max-width:1168px;margin:0 auto;padding:22px 24px">${mark}</header>`;
 }
 
 // ---- герой: заголовок + условия + кнопка «Подключить» (таймер вынесен в плашку, которая едет за страницей) ----
@@ -1281,7 +1281,7 @@ function landingHero(variant, name){
     ? landingDolyameConditionsCard()
     : landingConditionsCard();
 
-  return `<section style="max-width:1120px;margin:0 auto;padding:34px 24px 50px">
+  return `<section style="max-width:1168px;margin:0 auto;padding:34px 24px 50px">
     <p style="color:#6B7280;font-size:14px;margin:0 0 10px;font-weight:600">${esc(eyebrow)}</p>
     <h1 style="font-size:44px;line-height:1.15;font-weight:800;margin:0 0 18px;max-width:760px">${esc(h1[0])} ${esc(h1[1])}</h1>
     <p style="font-size:17px;color:#333;margin:0 0 6px;font-weight:600">${sub1}</p>
@@ -1292,7 +1292,7 @@ function landingHero(variant, name){
 }
 
 function landingConditionsCard(){
-  return `<div style="background:var(--card);border-radius:24px;padding:14px 28px;box-shadow:none;margin-bottom:28px;max-width:760px">
+  return `<div style="background:var(--card);border-radius:24px;padding:14px 28px;box-shadow:none;margin-bottom:28px">
     ${landingConditionsInner()}
   </div>`;
 }
@@ -1300,7 +1300,7 @@ function landingDolyameConditionsCard(){
   const fee = fmtPct($('bnplFee').value)+'%';
   const rows = [['Комиссия',fee],['Лимит','1 000–500 000 ₽'],['Сроки','6 недель, 3, 6, 10 мес.'],['Деньги на счёт','на следующий рабочий день']];
   const trs = rows.map(([k,v])=>`<tr><td style="padding:14px 4px;color:#6B7280;font-size:14px;border-bottom:1px solid #EEF0F2">${k}</td><td style="padding:14px 4px;font-weight:700;font-size:15px;text-align:right;border-bottom:1px solid #EEF0F2">${v}</td></tr>`).join('');
-  return `<div style="background:var(--card);border-radius:24px;padding:14px 28px;box-shadow:none;margin-bottom:28px;max-width:500px">
+  return `<div style="background:var(--card);border-radius:24px;padding:14px 28px;box-shadow:none;margin-bottom:28px">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${trs}</table>
     <div style="font-size:13px;color:#6E6A64;line-height:1.5;margin:12px 4px 6px">${esc(dolyameMoneyExample())}</div>
   </div>`;
@@ -1378,8 +1378,8 @@ function landingBusinessSection(variant, name, deadline){
       + tcard(BZ_OFFLINE, 'Офлайн-бизнес', 'Заявку оформляют прямо в точке продаж — на кассе или по QR-коду', ['Магазины','Клиники','Фитнес-клубы','Турагентства'], LANDING_LINKS.offline);
   return `<section style="padding:60px 24px">
     <div style="max-width:1120px;margin:0 auto">
-      <h2 style="font-size:32px;font-weight:800;margin:0 0 10px;text-align:center">${esc(heading)}</h2>
-      <p style="text-align:center;color:#6E6A64;font-size:15px;margin:0 0 30px">${esc(sub)}</p>
+      <h2 style="font-size:32px;font-weight:800;margin:0 0 10px">${esc(heading)}</h2>
+      <p style="color:#6E6A64;font-size:15px;margin:0 0 30px">${esc(sub)}</p>
       <div class="grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
         ${cards}
       </div>
@@ -1408,7 +1408,7 @@ function landingLinkCard(icon, title, links, desc){
 }
 function landingCardsSection(heading, cards, gray){
   return `<section style="${gray?'background:var(--sect);':''}padding:60px 24px">
-    <div style="max-width:1120px;margin:0 auto;text-align:center">
+    <div style="max-width:1120px;margin:0 auto">
       <h2 style="font-size:28px;font-weight:800;margin:0 0 30px">${esc(heading)}</h2>
       <div class="grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:left">${cards.join('')}</div>
     </div>
@@ -1458,13 +1458,13 @@ function landingTraining(){
 // ---- партнёры: статистика (те же цифры, что в блоках эффектов письма) ----
 function landingPartnersStats(variant){
   const e = EFFECTS[variant==='dolyame' ? 'dolyame' : 'lending'];
-  const tiles = [e.extra].concat(e.blocks).map(b=>`<div style="text-align:center">
+  const tiles = [e.extra].concat(e.blocks).map(b=>`<div style="background:var(--sect);border-radius:20px;padding:20px 22px">
     <div style="font-size:32px;font-weight:800;color:#333">${esc(b.big)}</div>
     <div style="font-size:13px;color:#6B7280;margin-top:4px">${esc(b.label)}</div>
   </div>`).join('');
   const heading = variant==='dolyame' ? 'Присоединяйтесь к партнёрам «Долями»' : 'Присоединяйтесь к партнёрам';
   return `<section style="padding:60px 24px">
-    <div style="max-width:1120px;margin:0 auto;text-align:center">
+    <div style="max-width:1120px;margin:0 auto">
       <h2 style="font-size:28px;font-weight:800;margin:0 0 30px">${esc(heading)}</h2>
       <div class="grid-4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">${tiles}</div>
     </div>
@@ -1511,7 +1511,7 @@ function landingThemes(){
   if(!themes.length) return '';
   return `<section style="background:var(--sect);padding:60px 24px">
     <div style="max-width:1120px;margin:0 auto">
-      <h2 style="font-size:32px;font-weight:800;margin:0 0 30px;text-align:center">О чём договорились</h2>
+      <h2 style="font-size:32px;font-weight:800;margin:0 0 30px">О чём договорились</h2>
       <div class="th-grid">${arrangeCards(themes).map(landingThemeCard).join('')}</div>
     </div>
   </section>`;
@@ -1576,8 +1576,8 @@ function landingDolyameKit(){
   ];
   return `<section style="padding:60px 24px">
     <div style="max-width:1120px;margin:0 auto">
-      <h2 style="font-size:32px;font-weight:800;margin:0 0 10px;text-align:center">Всё для работы с Долями</h2>
-      <p style="text-align:center;color:#6E6A64;font-size:15px;margin:0 0 30px">Интеграции, деньги и возвраты, маркетинговая поддержка и кейсы</p>
+      <h2 style="font-size:32px;font-weight:800;margin:0 0 10px">Всё для работы с Долями</h2>
+      <p style="color:#6E6A64;font-size:15px;margin:0 0 30px">Интеграции, деньги и возвраты, маркетинговая поддержка и кейсы</p>
       <div class="th-grid">${arrangeCards(cards).map(landingThemeCard).join('')}</div>
     </div>
   </section>`;
@@ -1602,14 +1602,14 @@ function landingFaq(variant){
     ['Можно ли подключить и Долями, и Рассрочку одновременно?','Да, оба сервиса подключаются к одной платёжной форме — покупатель сам выбирает удобный способ оплаты.'],
   ];
   const rows = items.map((pair,i)=>`<div class="faq-item" style="border-bottom:1px solid #E5E7EB">
-    <button type="button" class="faq-q" onclick="toggleFaq(this)" style="width:100%;text-align:left;background:none;border:none;padding:18px 4px;font-size:15px;font-weight:600;color:#333;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:inherit">
+    <button type="button" class="faq-q" onclick="toggleFaq(this)" style="width:100%;text-align:left;background:none;border:none;padding:18px 0;font-size:15px;font-weight:600;color:#333;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:inherit">
       <span>${esc(pair[0])}</span><span class="faq-ic" style="font-size:20px;font-weight:400;color:#6B7280">+</span>
     </button>
-    <div class="faq-a" style="display:none;padding:0 4px 18px;font-size:14px;color:#6B7280;line-height:1.6">${esc(pair[1])}</div>
+    <div class="faq-a" style="display:none;padding:0 0 18px;font-size:14px;color:#6B7280;line-height:1.6">${esc(pair[1])}</div>
   </div>`).join('');
   return `<section style="padding:60px 24px">
-    <div style="max-width:720px;margin:0 auto">
-      <h2 style="font-size:28px;font-weight:800;margin:0 0 30px;text-align:center">Частые вопросы</h2>
+    <div style="max-width:1120px;margin:0 auto">
+      <h2 style="font-size:28px;font-weight:800;margin:0 0 30px">Частые вопросы</h2>
       ${rows}
     </div>
   </section>`;
@@ -1686,7 +1686,7 @@ function landingContactLine(c){
 }
 function landingContacts(c, partner){
   if(!hasAnyContact(c)) return '';
-  return `<section id="contacts" style="padding:0 24px 60px;scroll-margin-top:120px"><div style="max-width:720px;margin:0 auto;background:var(--sect);border-radius:16px;padding:30px 28px;text-align:center">
+  return `<section id="contacts" style="padding:0 24px 60px;scroll-margin-top:120px"><div style="max-width:1120px;margin:0 auto;background:var(--sect);border-radius:24px;padding:32px 32px">
     <h2 style="font-size:24px;margin:0 0 8px">Готовы подключиться?</h2>
     <div style="font-size:15px;color:#6B7280;margin-bottom:4px">${c.name ? `Ваш менеджер — <strong style="color:#333">${esc(c.name)}</strong>` : 'Свяжитесь с вашим менеджером'}</div>
     <div style="font-size:14px;color:#6B7280">${landingContactLine(c)}</div>
@@ -1706,7 +1706,7 @@ function landingExpired(c, partner, name, deadline){
   </div>`;
 }
 function landingFooter(c, name, deadline){
-  return `<footer style="max-width:720px;margin:0 auto;padding:0 24px 44px;text-align:center;font-size:12px;color:#8C8378;line-height:1.6">Персональное предложение для ${esc(name)}${c.name ? ', подготовил менеджер Т-Банка ' + esc(c.name) : ''}. Действует до ${esc(deadline)}. Подробная информация о продуктах — на официальном сайте tbank.ru.</footer>`;
+  return `<footer style="max-width:1168px;margin:0 auto;padding:0 24px 44px;font-size:12px;color:#8C8378;line-height:1.6">Персональное предложение для ${esc(name)}${c.name ? ', подготовил менеджер Т-Банка ' + esc(c.name) : ''}. Действует до ${esc(deadline)}. Подробная информация о продуктах — на официальном сайте tbank.ru.</footer>`;
 }
 
 // Оформление лендинга: в предложении с Долями — в стиле Долями (белый фон, чёрные кнопки,
@@ -1817,7 +1817,7 @@ h1,h2{font-weight:800}
 a{font-family:inherit}
 .adv-card a{color:var(--link)}
 #tbar{position:sticky;top:0;z-index:50;background:#333;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.18)}
-.tbar-in{max-width:1120px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.tbar-in{max-width:1168px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .tbar-cap{font-size:16px;font-weight:600}
 .tbar-digits{display:flex;gap:8px}
 .tb{background:var(--accent);color:#333;border-radius:10px;min-width:62px;padding:6px 8px;text-align:center}
@@ -1843,7 +1843,7 @@ a{font-family:inherit}
   #conditions > div{padding-left:14px!important;padding-right:14px!important;border-radius:20px!important}
   #conditions table{font-size:12.5px}
   #conditions td,#conditions th{padding-left:6px!important;padding-right:6px!important;word-break:break-word}
-  section{padding-left:16px!important;padding-right:16px!important}
+  section,body > header,footer{padding-left:16px!important;padding-right:16px!important}
   #conditions table{table-layout:fixed;width:100%}
   #conditions td{white-space:normal!important;overflow-wrap:break-word}
   .dol-cards{grid-template-columns:1fr!important}
@@ -1876,6 +1876,8 @@ a{font-family:inherit}
   #conditions td{white-space:nowrap}
   #calc{padding:16px 14px !important}
 }
+#contacts .cbtns{justify-content:flex-start}
+@media(max-width:768px){#contacts > div{padding:24px 20px !important}}
 /* телефон горизонтально: компактные шапка и таймер, две колонки там, где хватает ширины */
 @media (orientation:landscape) and (max-height:500px){
   body > header{padding-top:10px !important;padding-bottom:10px !important}
