@@ -281,6 +281,12 @@ input[type=text]:focus,input[type=number]:focus{outline:none;background:#fff;bor
 
 .seg .ch-logo{width:22px;height:22px;display:block}
 .lb-ic .ch-logo{width:16px;height:16px;flex:none}
+
+/* кнопка «Сбросить» — видна всегда */
+.ab-reset{width:auto!important;padding:0 12px;gap:6px;color:#C4372D;font-size:14px;font-weight:600}
+.ab-reset:hover:not(:disabled){background:#FCECEA}
+.ab-reset::after{display:none!important}
+@media(max-width:900px){ .ab-reset{width:40px!important;padding:0} .ab-reset-t{display:none} }
 </style>
 </head>
 <body>
@@ -298,13 +304,8 @@ input[type=text]:focus,input[type=number]:focus{outline:none;background:#fff;bor
     <button type="button" class="ab ab-icon" id="btnEml" data-tip="Скачать письмо .eml" aria-label="Скачать письмо .eml"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12.5V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7"/><path d="M3.5 6.5l8.5 6 8.5-6"/><path d="M18 15v6M15.5 18.5L18 21l2.5-2.5"/></svg></button>
     <button type="button" class="ab ab-icon" id="btnLanding" data-tip="Скачать лендинг с условиями" aria-label="Скачать лендинг с условиями"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 8.5h18"/><path d="M7 13h5M7 16h3"/><path d="M16 12v5M14 15l2 2 2-2"/></svg></button>
     <button type="button" class="ab ab-icon" id="btnChecklist" data-tip="Чек-лист запуска .txt" aria-label="Скачать чек-лист запуска"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6.5l1.5 1.5L8.5 5M4 12.5l1.5 1.5 3-3M4 18.5l1.5 1.5 3-3"/><path d="M12 7h8M12 13h8M12 19h8"/></svg></button>
-    <div class="menu-wrap">
-      <button type="button" class="ab ab-icon" id="btnMenu" data-tip="Ещё" aria-label="Ещё" aria-haspopup="menu" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button>
-      <div class="menu" id="menu" role="menu" hidden>
-        <button type="button" role="menuitem" id="clearDraft">Очистить сохранённый черновик</button>
-        <button type="button" role="menuitem" id="btnReset" class="danger">Сбросить форму</button>
-      </div>
-    </div>
+    <span class="ab-sep" aria-hidden="true"></span>
+    <button type="button" class="ab ab-icon ab-reset" id="btnReset" data-tip="Сбросить все данные" aria-label="Сбросить все данные"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4v4.5H8"/></svg><span class="ab-reset-t">Сбросить</span></button>
   </div>
   <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
 </header>
@@ -2294,11 +2295,8 @@ $('btnChecklist').onclick = ()=>{
   downloadTextFile(`Чеклист_${val('partnerName')||'партнёр'}.txt`, text, 'text/plain;charset=utf-8');
 };
 
-$('clearDraft').onclick = ()=>{
-  if(confirm('Очистить сохранённый черновик?')){ clearStoredDraft(); }
-};
 $('btnReset').onclick = ()=>{
-  if(confirm('Сбросить все поля формы?')){
+  if(confirm('Сбросить все данные формы? Сохранённый черновик тоже удалится.')){
     $('partnerName').value=''; $('contactName').value='';
     $('managerName').value=''; $('managerPhone').value=''; $('managerEmail').value=''; $('managerTg').value=''; $('managerWa').value=''; $('managerMax').value='';
     $('bnplFee').value=5; $('bnplFeeVal').textContent='5%';
@@ -2488,12 +2486,6 @@ function uiAfterUpdate(){
   });
 
   // меню «Ещё»
-  var menu = $('menu'), btn = $('btnMenu');
-  var closeMenu = function(){ menu.hidden = true; btn.setAttribute('aria-expanded','false'); };
-  btn.addEventListener('click', function(e){ e.stopPropagation(); var open = menu.hidden; menu.hidden = !open; btn.setAttribute('aria-expanded', String(open)); if(open) menu.querySelector('button').focus(); });
-  document.addEventListener('click', function(e){ if(!menu.hidden && !menu.contains(e.target)) closeMenu(); });
-  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !menu.hidden){ closeMenu(); btn.focus(); } });
-  menu.querySelectorAll('button').forEach(function(b){ b.addEventListener('click', closeMenu); });
 
   // главная кнопка: копирует под выбранный канал
   var copyBtn = $('btnCopy');
