@@ -987,8 +987,8 @@ function greetingHTML(){
   const prodPhrase = prod ? ` по ${prod}` : '';
   const co = name ? ` для <strong>${esc(name)}</strong>` : '';
   const c = contact ? esc(contact) : '';
-  if(channel==='phone') return `${c?c+', ':''}в продолжение нашего разговора направляю условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
-  if(channel==='meeting') return `${c?c+', ':''}по итогам встречи направляю условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
+  if(channel==='phone') return `${c?c+', в':'В'} продолжение нашего разговора направляю условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
+  if(channel==='meeting') return `${c?c+', по':'По'} итогам встречи направляю условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
   return `Здравствуйте${c?', '+c:''}! Направляем условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
 }
 function greetingPlain(){
@@ -996,8 +996,8 @@ function greetingPlain(){
   const prod = productsPhrase();
   const prodPhrase = prod ? ` по ${prod}` : '';
   const co = name ? ` для ${name}` : '';
-  if(channel==='phone') return `${contact?contact+', ':''}в продолжение нашего разговора направляю условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
-  if(channel==='meeting') return `${contact?contact+', ':''}по итогам встречи направляю условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
+  if(channel==='phone') return `${contact?contact+', в':'В'} продолжение нашего разговора направляю условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
+  if(channel==='meeting') return `${contact?contact+', по':'По'} итогам встречи направляю условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
   return `Здравствуйте${contact?', '+contact:''}! Направляем условия сотрудничества с Т-Банком${prodPhrase}${co}.`;
 }
 
@@ -1009,13 +1009,13 @@ const EFFECTS = {
     extra:  {big:'250 000+', label:'компаний-партнёров'},
     // конверсия зависит от продуктов: с Долями — до +50%, только рассрочка/кредит — +30%
     get blocks(){ return [{big:'до 150%', label:'рост торгового оборота'}, {big: getProducts().includes('Долями') ? '+50%' : '+30%', label:'конверсия в покупку'}, {big:'+60%', label:'средний чек'}]; },
-    text: 'Покупатели, которым не по карману заплатить сразу, оформляют рассрочку или кредит — растут конверсия, средний чек и оборот.',
+    text: 'Покупатели, которым не по карману заплатить сразу, оформляют рассрочку или кредит. Растут конверсия, средний чек и оборот.',
   },
   dolyame: {
     // цифры — презентация «Долями», слайд 3: внутренние данные сервиса на конец 2024 года
     extra:  {big:'1 день', label:'деньги на счёт'},
     blocks: [{big:'+81%', label:'средний чек'}, {big:'60 млн', label:'переходов в год'}, {big:'58%', label:'повторных покупок'}],
-    text: 'Покупатель платит частями, а вы получаете полную стоимость покупки на следующий рабочий день. По данным сервиса на конец 2024 года.',
+    text: 'Покупатель платит частями, а вы получаете полную стоимость покупки на следующий рабочий день.',
   },
 };
 function lcFirst(s){ return s.charAt(0).toLowerCase() + s.slice(1); }
@@ -2110,11 +2110,8 @@ function subjectLine(){
   const ps = getProducts();
   const hasLending = ps.includes('Кредит') || ps.includes('Рассрочка');
   const hasDolyame = ps.includes('Долями');
-  let productPart;
-  if(hasLending && hasDolyame) productPart = 'Рассрочка, кредит и Долями';
-  else if(hasDolyame) productPart = 'Оплата Долями';
-  else productPart = 'Рассрочка и кредит';
-  return `${productPart} от Т-Банка для бизнеса — предложение для ${name}`;
+  const productPart = hasLending ? 'Кредитные продукты' : 'Оплата Долями';
+  return `${productPart} от Т-Банка - предложение для ${name}`;
 }
 
 function update(){
