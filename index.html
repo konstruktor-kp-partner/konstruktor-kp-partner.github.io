@@ -1130,43 +1130,30 @@ function agreementThemes(opts){
 }
 
 // --- письмо: таблицы и инлайн-стили; иконки тем — эмодзи (SVG почтовые клиенты вырезают) ---
-// Письмо: договорённости без заливки и скруглений (Outlook их искажает) — каждый блок отделён жёлтой линией.
-// Ссылки — кнопками: кликабелен весь текст и поле вокруг него, а не только стрелка.
-const LINK_C = '#1F5FD1';
-function mailLink(url, text){
-  return `<a href="${esc(url)}" target="_blank" style="display:inline-block;color:${LINK_C};text-decoration:none;font-size:13px;font-weight:600;line-height:18px;padding:5px 12px;margin:3px 6px 3px 0;border:1px solid #C9DAF8;border-radius:8px;background:#F3F7FF;white-space:nowrap">${esc(text)}&nbsp;→</a>`;
-}
 function themeRowHTML(r, noTop){
   const top = noTop ? '' : `border-top:1px solid ${T.line};`;
-  if(r.header) return `<tr><td style="${top}padding:12px 0 2px;font-size:12px;font-weight:700;color:${T.muted};text-transform:uppercase;letter-spacing:.03em">${esc(r.header)}</td></tr>`;
-  const links = r.link ? [{text: r.word || 'Открыть', url: r.link}] : (r.links || []);
-  const label = `<div style="font-weight:600">${esc(r.label)}</div>`;
+  if(r.header) return `<tr><td colspan="2" style="${top}padding:12px 0 0;font-size:12px;font-weight:700;color:${T.muted}">${esc(r.header)}</td></tr>`;
+  const label = r.link
+    ? `<a href="${esc(r.link)}" style="color:${T.text};text-decoration:none;font-weight:600">${esc(r.label)}</a>`
+    : `<span style="font-weight:600">${esc(r.label)}</span>`;
   const desc = r.desc ? `<div style="font-size:13px;color:${T.muted};margin-top:3px;line-height:1.45">${esc(r.desc)}</div>` : '';
-  const btns = links.length ? `<div style="margin-top:6px">${links.map(l=>mailLink(l.url, l.text)).join('')}</div>` : '';
-  return `<tr><td style="${top}padding:10px 0;font-size:14px;color:${T.text};line-height:1.45">${label}${desc}${btns}</td></tr>`;
+  let right = '';
+  if(r.link) r = Object.assign({}, r, {links:[{text: r.word || 'Открыть', url: r.link}]});
+  if(r.links) right = r.links.map(l=>`<a href="${esc(l.url)}" style="color:${T.text};text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap">${esc(l.text)}<span style="color:${CHEV}">&nbsp;›</span></a>`).join('&nbsp;&nbsp;&nbsp; ');
+  return `<tr><td valign="middle" style="${top}padding:11px 0;font-size:14px;color:${T.text};line-height:1.35">${label}${desc}</td><td align="right" valign="middle" style="${top}padding:11px 0 11px 12px">${right}</td></tr>`;
 }
 function themeCardHTML(t){
-  const head = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-<td width="30" valign="middle" style="font-size:18px;line-height:24px;padding:0 0 8px">${THEME_ICON[t.id]}</td>
-<td valign="middle" style="font-size:16px;font-weight:700;color:${T.text};padding:0 0 8px">${esc(t.title)}</td></tr></table>`;
+  const head = `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:6px"><tr>
+<td width="36" height="36" align="center" valign="middle" style="background:#fff;border-radius:18px;font-size:18px;line-height:36px">${THEME_ICON[t.id]}</td>
+<td style="padding-left:12px;font-size:17px;font-weight:700;color:${T.text}">${esc(t.title)}</td></tr></table>`;
   let body;
-  if(t.motivation) body = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-top:1px solid ${T.line};padding:12px 0 4px">${motivationBlockHTML()}</td></tr></table>`;
+  if(t.motivation) body = `<div style="border-top:1px solid ${T.line};padding:12px 0 10px">${motivationBlockHTML()}</div>`;
   else {
-    // обучение: материалы одной группы — кнопками в одну строку, чтобы блок не растягивался
-    let list = t.rows;
-    if(t.id==='training'){
-      list = []; let cur = null;
-      t.rows.forEach(r=>{
-        if(r.header){ cur = {label:r.header.replace(/ — .*/, ''), links:[]}; list.push(cur); }
-        else if(r.link && cur) cur.links.push({text:r.label, url:r.link});
-        else { cur = null; list.push(r); }
-      });
-    }
     let prevHeader = false;
-    const rows = list.map(r=>{ const html = themeRowHTML(r, prevHeader); prevHeader = !!r.header; return html; }).join('');
+    const rows = t.rows.map(r=>{ const html = themeRowHTML(r, prevHeader); prevHeader = !!r.header; return html; }).join('');
     body = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${rows}</table>`;
   }
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:22px"><tr><td style="border-top:3px solid #FFDD2D;padding:12px 0 0">${head}${body}</td></tr></table>`;
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px"><tr><td style="background:${T.card};border-radius:20px;padding:16px 20px 6px">${head}${body}</td></tr></table>`;
 }
 function agreementsHTML(){
   const themes = agreementThemes();
@@ -1233,7 +1220,7 @@ function motivationBlockHTML(){
   if(ex.scaled){
     calc += `<br><br>При кредитном обороте ${esc(fmtMoney(ex.scaled.turnover))}/мес. (≈ ${Math.round(ex.scaled.salesCount)} продаж по среднему чеку ${esc(fmtMoney(ex.checkAmount))}) — вознаграждение партнёра ≈ <strong>${esc(fmtMoney(Math.round(ex.scaled.total)))}</strong>/мес.`;
   }
-  return `${cardsHTML(cards)}${noteHTML(calc)}`;
+  return `${cardsHTML(cards, '#fff')}${noteHTML(calc)}`;
 }
 
 // Работа с персоналом теперь входит в «О чём договорились» отдельными темами (обучение, мотивация, акции).
