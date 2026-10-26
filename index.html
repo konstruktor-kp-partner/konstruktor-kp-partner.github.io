@@ -287,6 +287,13 @@ input[type=text]:focus,input[type=number]:focus{outline:none;background:#fff;bor
 .ab-reset:hover:not(:disabled){background:#FCECEA}
 .ab-reset::after{display:none!important}
 @media(max-width:900px){ .ab-reset{width:40px!important;padding:0} .ab-reset-t{display:none} }
+
+/* формат письма: полное / короткое */
+.mode-bar{padding:12px 24px 0}
+.mode-seg{display:inline-flex;background:var(--g);border-radius:10px;padding:3px;gap:2px}
+.mode-seg button{border:none;background:none;font:inherit;font-size:13px;font-weight:500;color:#55595F;padding:7px 12px;border-radius:8px;cursor:pointer}
+.mode-seg button[aria-checked="true"]{background:#fff;color:#333;font-weight:600;box-shadow:0 1px 3px rgba(40,44,52,.12)}
+@media(max-width:900px){ .mode-bar{padding:10px 16px 0} }
 </style>
 </head>
 <body>
@@ -491,6 +498,10 @@ input[type=text]:focus,input[type=number]:focus{outline:none;background:#fff;bor
     <span class="pv-meta" id="pvMeta"></span>
   </div>
   <div class="pv-email" id="pvEmail">
+    <div class="mode-bar"><div class="mode-seg" role="radiogroup" aria-label="Формат письма">
+      <button type="button" role="radio" data-mode="full" aria-checked="true">Полное письмо</button>
+      <button type="button" role="radio" data-mode="short" aria-checked="false">Короткое письмо</button>
+    </div></div>
     <div class="mail-head">
       <div class="mh-row"><span class="mh-k">Тема</span><span class="mh-v" id="mailSubject"></span></div>
       <div class="mh-row"><span class="mh-k">Кому</span><span class="mh-v mh-muted" id="mailTo"></span></div>
@@ -949,8 +960,8 @@ function cardsHTML(cards, bg){
   const pad = '<td width="33%" class="kp-pad" style="padding:0 10px 10px 0"></td>'.repeat(3 - cards.length);
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="table-layout:fixed"><tr>${cells}${pad}</tr></table>`;
 }
-function noteHTML(text){ return `<div style="background:${C.noteBg};padding:12px 16px;border-radius:14px;font-size:13px;color:#555;margin-top:10px">${text}</div>`; }
-function calcHTML(text){ return `<div style="background:${T.card};border-radius:16px;padding:14px 18px;font-size:13px;color:#444;line-height:1.6;margin-top:10px">${text}</div>`; }
+function noteHTML(text){ return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:10px"><tr><td bgcolor="${C.noteBg}" style="background:${C.noteBg};padding:12px 16px;border-radius:14px;font-size:13px;line-height:1.5;color:#555">${text}</td></tr></table>`; }
+function calcHTML(text){ return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:10px"><tr><td bgcolor="${T.card}" style="background:${T.card};border-radius:16px;padding:14px 18px;font-size:13px;color:#444;line-height:1.6">${text}</td></tr></table>`; }
 function captionHTML(text){ return `<div style="font-size:12px;color:#777;margin-top:10px">${text}</div>`; }
 function rowListHTML(items){
   const rows = items.map((it,i)=>{
@@ -1119,30 +1130,43 @@ function agreementThemes(opts){
 }
 
 // --- письмо: таблицы и инлайн-стили; иконки тем — эмодзи (SVG почтовые клиенты вырезают) ---
+// Письмо: договорённости без заливки и скруглений (Outlook их искажает) — каждый блок отделён жёлтой линией.
+// Ссылки — кнопками: кликабелен весь текст и поле вокруг него, а не только стрелка.
+const LINK_C = '#1F5FD1';
+function mailLink(url, text){
+  return `<a href="${esc(url)}" target="_blank" style="display:inline-block;color:${LINK_C};text-decoration:none;font-size:13px;font-weight:600;line-height:18px;padding:5px 12px;margin:3px 6px 3px 0;border:1px solid #C9DAF8;border-radius:8px;background:#F3F7FF;white-space:nowrap">${esc(text)}&nbsp;→</a>`;
+}
 function themeRowHTML(r, noTop){
   const top = noTop ? '' : `border-top:1px solid ${T.line};`;
-  if(r.header) return `<tr><td colspan="2" style="${top}padding:12px 0 0;font-size:12px;font-weight:700;color:${T.muted}">${esc(r.header)}</td></tr>`;
-  const label = r.link
-    ? `<a href="${esc(r.link)}" style="color:${T.text};text-decoration:none;font-weight:600">${esc(r.label)}</a>`
-    : `<span style="font-weight:600">${esc(r.label)}</span>`;
+  if(r.header) return `<tr><td style="${top}padding:12px 0 2px;font-size:12px;font-weight:700;color:${T.muted};text-transform:uppercase;letter-spacing:.03em">${esc(r.header)}</td></tr>`;
+  const links = r.link ? [{text: r.word || 'Открыть', url: r.link}] : (r.links || []);
+  const label = `<div style="font-weight:600">${esc(r.label)}</div>`;
   const desc = r.desc ? `<div style="font-size:13px;color:${T.muted};margin-top:3px;line-height:1.45">${esc(r.desc)}</div>` : '';
-  let right = '';
-  if(r.link) r = Object.assign({}, r, {links:[{text: r.word || 'Открыть', url: r.link}]});
-  if(r.links) right = r.links.map(l=>`<a href="${esc(l.url)}" style="color:${T.text};text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap">${esc(l.text)}<span style="color:${CHEV}">&nbsp;›</span></a>`).join('&nbsp;&nbsp;&nbsp; ');
-  return `<tr><td valign="middle" style="${top}padding:11px 0;font-size:14px;color:${T.text};line-height:1.35">${label}${desc}</td><td align="right" valign="middle" style="${top}padding:11px 0 11px 12px">${right}</td></tr>`;
+  const btns = links.length ? `<div style="margin-top:6px">${links.map(l=>mailLink(l.url, l.text)).join('')}</div>` : '';
+  return `<tr><td style="${top}padding:10px 0;font-size:14px;color:${T.text};line-height:1.45">${label}${desc}${btns}</td></tr>`;
 }
 function themeCardHTML(t){
-  const head = `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:6px"><tr>
-<td width="36" height="36" align="center" valign="middle" style="background:#fff;border-radius:18px;font-size:18px;line-height:36px">${THEME_ICON[t.id]}</td>
-<td style="padding-left:12px;font-size:17px;font-weight:700;color:${T.text}">${esc(t.title)}</td></tr></table>`;
+  const head = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+<td width="30" valign="middle" style="font-size:18px;line-height:24px;padding:0 0 8px">${THEME_ICON[t.id]}</td>
+<td valign="middle" style="font-size:16px;font-weight:700;color:${T.text};padding:0 0 8px">${esc(t.title)}</td></tr></table>`;
   let body;
-  if(t.motivation) body = `<div style="border-top:1px solid ${T.line};padding:12px 0 10px">${motivationBlockHTML()}</div>`;
+  if(t.motivation) body = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-top:1px solid ${T.line};padding:12px 0 4px">${motivationBlockHTML()}</td></tr></table>`;
   else {
+    // обучение: материалы одной группы — кнопками в одну строку, чтобы блок не растягивался
+    let list = t.rows;
+    if(t.id==='training'){
+      list = []; let cur = null;
+      t.rows.forEach(r=>{
+        if(r.header){ cur = {label:r.header.replace(/ — .*/, ''), links:[]}; list.push(cur); }
+        else if(r.link && cur) cur.links.push({text:r.label, url:r.link});
+        else { cur = null; list.push(r); }
+      });
+    }
     let prevHeader = false;
-    const rows = t.rows.map(r=>{ const html = themeRowHTML(r, prevHeader); prevHeader = !!r.header; return html; }).join('');
+    const rows = list.map(r=>{ const html = themeRowHTML(r, prevHeader); prevHeader = !!r.header; return html; }).join('');
     body = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${rows}</table>`;
   }
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px"><tr><td style="background:${T.card};border-radius:20px;padding:16px 20px 6px">${head}${body}</td></tr></table>`;
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:22px"><tr><td style="border-top:3px solid #FFDD2D;padding:12px 0 0">${head}${body}</td></tr></table>`;
 }
 function agreementsHTML(){
   const themes = agreementThemes();
@@ -1209,7 +1233,7 @@ function motivationBlockHTML(){
   if(ex.scaled){
     calc += `<br><br>При кредитном обороте ${esc(fmtMoney(ex.scaled.turnover))}/мес. (≈ ${Math.round(ex.scaled.salesCount)} продаж по среднему чеку ${esc(fmtMoney(ex.checkAmount))}) — вознаграждение партнёра ≈ <strong>${esc(fmtMoney(Math.round(ex.scaled.total)))}</strong>/мес.`;
   }
-  return `${cardsHTML(cards, '#fff')}${noteHTML(calc)}`;
+  return `${cardsHTML(cards)}${noteHTML(calc)}`;
 }
 
 // Работа с персоналом теперь входит в «О чём договорились» отдельными темами (обучение, мотивация, акции).
@@ -1238,9 +1262,44 @@ function signatureHTML(){
   return `<div style="margin-top:22px;color:#444">Будем рады ответить на любые вопросы.<br><br>С уважением,<br>${lines.join('<br>')}</div>`;
 }
 
+// Формат письма: полное (все условия и договорённости) или короткое сопроводительное (детали — в файле лендинга)
+var letterMode = 'full';
+try{ if(localStorage.getItem('kpLetterMode')==='short') letterMode = 'short'; }catch(e){}
+// 3–4 главных условия: по продуктам + мотивация, если согласована
+function mainConditions(){
+  const out = [];
+  getProductBlocks().forEach(b=>{
+    if(b.name==='Кредит') out.push('Кредит для покупателей — от 14% до 32% годовых, ставка подбирается индивидуально');
+    else if(b.name==='Рассрочка') out.push(b.table && b.table.length ? 'Рассрочка — комиссия ' + b.table.map(r=>`${fmtPct(r.pct)}% на ${r.months} мес.`).join(', ') : 'Рассрочка — сроки и комиссия согласуются отдельно');
+    else if(b.name==='Долями') out.push(`Долями — комиссия ${fmtPct($('bnplFee').value)}%, деньги на счёт на следующий рабочий день`);
+  });
+  if(motivationExample()) out.push(motivationLineText());
+  return out.slice(0, 4);
+}
+const SHORT_FILE_LINE = 'Подробности и все договорённости — в приложенном файле.';
+function buildShortLetterHTML(){
+  const greeting = `<div style="font-size:14px;color:${C.text};margin-bottom:16px;line-height:1.55">${greetingHTML()}</div>`;
+  const conds = mainConditions();
+  const list = conds.length ? `<div style="font-size:14px;font-weight:700;color:${C.text};margin-bottom:6px">Главные условия</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:14px">${conds.map(c=>`<tr><td width="18" valign="top" style="font-size:14px;line-height:1.55;color:#B39400;padding:3px 0">•</td><td style="font-size:14px;line-height:1.55;color:${C.text};padding:3px 0">${esc(c)}</td></tr>`).join('')}</table>` : '';
+  const file = `<div style="font-size:14px;color:${C.text};line-height:1.55;margin-bottom:10px">${SHORT_FILE_LINE}</div>`;
+  const dl = getProducts().length ? `<div style="font-size:14px;color:${C.text};line-height:1.55">Условия фиксируем на 7 дней — ждём обратную связь до <strong>${esc(deadlineDate())}</strong>.</div>` : '';
+  return greeting + list + file + dl + signatureHTML();
+}
+function buildShortLetter(){
+  const L = [greetingPlain()];
+  const conds = mainConditions();
+  if(conds.length){ L.push(''); L.push('Главные условия:'); conds.forEach(c=>L.push('- '+c)); }
+  L.push(''); L.push(SHORT_FILE_LINE);
+  if(getProducts().length) L.push(`Условия фиксируем на 7 дней — ждём обратную связь до ${deadlineDate()}.`);
+  L.push(''); L.push('Будем рады ответить на любые вопросы.'); L.push('');
+  L.push('С уважением,'); signatureLines().forEach(l=>L.push(l));
+  return L.join('\n');
+}
+
 function buildLetterHTML(){
+  if(letterMode==='short') return buildShortLetterHTML();
   const greeting = `<div style="font-size:14px;font-weight:500;color:${C.text};margin-bottom:20px">${greetingHTML()}</div>`;
-  return greeting + effectsHTML() + compareHTML() + productBlocksHTML() + agreementsHTML() + deadlineHTML() + signatureHTML();
+  return greeting + effectsHTML() + productBlocksHTML() + agreementsHTML() + deadlineHTML() + signatureHTML();
 }
 
 // Договорённости одним списком — общая часть текстовых версий (письмо и мессенджер).
@@ -1251,12 +1310,11 @@ function motivationLineText(){
 }
 
 function buildLetter(){
+  if(letterMode==='short') return buildShortLetter();
   const lines = [];
   lines.push(greetingPlain());
   const eff = effectsList();
   if(eff.length){ lines.push(''); lines.push('На что влияет инструмент:'); eff.forEach(i=>lines.push('- '+i)); }
-  const cmp = compareLines();
-  if(cmp.length){ lines.push(''); lines.push(compareTitle(compareCols()) + ':'); cmp.forEach(i=>lines.push('- '+i)); lines.push(COMPARE.note); }
 
   productBlocksText(lines);
 
@@ -1574,6 +1632,7 @@ function landingThemeRow(r){
   if(r.header) return `<div class="th-group">${esc(r.header)}</div>`;
   const left = `<span class="th-l"><span class="th-label">${esc(r.label)}</span>${r.desc?`<span class="th-desc">${esc(r.desc)}</span>`:''}</span>`;
   if(r.link) return `<a class="th-row th-link" href="${esc(r.link)}" target="_blank" rel="noopener">${left}<span class="th-go">${esc(r.word || 'Открыть')} <span class="chev">›</span></span></a>`;
+  if(r.value) return `<div class="th-row">${left}<span class="th-val">${esc(r.value)}</span></div>`;
   const right = r.links ? `<span class="th-links">${r.links.map(l=> l.icon && CH_ICON[l.icon]
     ? `<a class="th-ico" href="${esc(l.url)}" target="_blank" rel="noopener" title="${esc(l.text)}" aria-label="${esc(l.text)}">${CH_ICON[l.icon]}</a>`
     : `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.text)} <span class="chev">›</span></a>`).join('')}</span>` : '';
@@ -1595,8 +1654,30 @@ function landingThemeCard(t){
     <div class="th-rows">${t.rows.map(landingThemeRow).join('')}</div>
   </div>`;
 }
+// Мотивация персонала на лендинге — с той же детализацией, что в письме: параметры и пример расчёта
+function landingMotivationRows(){
+  const ex = motivationExample();
+  if(!ex) return null;
+  const R = [
+    {label:'Тип вознаграждения', desc: ex.typeLabel==='АВ' ? 'Агентское вознаграждение за объём продаж' : 'Комиссионное вознаграждение на расчётный счёт', value: ex.typeLabel},
+    {label:'Ставка вознаграждения', value: fmtPct(ex.pct) + '%'},
+    {label:'Средний срок', desc:'По выбранным продуктам', value: ex.term + ' мес.'},
+  ];
+  if(state.motivationAddon.has('insurance')) R.push({label:'Коробочное страхование', desc:`Стоимость ${fmtPct(ex.insCostPct)}% в месяц, вознаграждение партнёру ${fmtPct(ex.insRewardPct)}%`, value:'≈ ' + fmtMoney(Math.round(ex.insReward))});
+  if(state.motivationAddon.has('sms') && ex.smsPrice) R.push({label:'Push-SMS', desc:'Выплата за одну push-SMS', value: fmtMoney(ex.smsPrice)});
+  const parts = [`${ex.typeLabel} ≈ ${fmtMoney(Math.round(ex.base))}`];
+  if(ex.sms) parts.push(`Push-SMS ≈ ${fmtMoney(Math.round(ex.sms))}`);
+  if(ex.insReward) parts.push(`страхование ≈ ${fmtMoney(Math.round(ex.insReward))}`);
+  R.push({label:'Пример на одной продаже', desc:`Чек ${fmtMoney(ex.checkAmount)}, срок ${ex.term} мес.: ${parts.join(', ')}`, value:'≈ ' + fmtMoney(Math.round(ex.total))});
+  if(ex.scaled) R.push({label:'В месяц при вашем обороте', desc:`Кредитный оборот ${fmtMoney(ex.scaled.turnover)}/мес. — около ${Math.round(ex.scaled.salesCount)} продаж по ${fmtMoney(ex.checkAmount)}`, value:'≈ ' + fmtMoney(Math.round(ex.scaled.total))});
+  return R;
+}
 function landingThemes(){
-  const themes = agreementThemes({terms:false});
+  const themes = agreementThemes({terms:false}).map(t=>{
+    if(!t.motivation) return t;
+    const rows = landingMotivationRows();
+    return rows ? Object.assign({}, t, {rows, wide:true}) : t;
+  });
   if(!themes.length) return '';
   return `<section style="background:var(--sect);padding:60px 24px">
     <div style="max-width:1120px;margin:0 auto">
@@ -1836,7 +1917,6 @@ function buildLandingPageHTML(tsOverride){
   const bar = landingStickyBar(deadline);
   const hero = landingHero(variant, name);
   const advantages = landingAdvantages(variant);
-  const compare = landingCompare();
   const business = landingBusinessSection(variant, name, deadline);
   // если способы подключения выбраны — они внутри «О чём договорились», иначе показываем типовые
   const integration = state.tech.size ? '' : landingIntegration(variant);
@@ -1975,6 +2055,7 @@ a{font-family:inherit}
   #calc{padding:16px 14px !important}
 }
 #contacts .cbtns{justify-content:flex-start}
+.th-val{font-weight:800;font-size:16px;white-space:nowrap;margin-left:16px;flex-shrink:0}
 .st-wrap{margin:0 0 28px}
 .st-tile{background:var(--sect);border-radius:20px;padding:18px 20px}
 .st-big{font-size:30px;font-weight:800;color:#333;line-height:1.15}
@@ -2031,7 +2112,6 @@ ${header}
 ${bar}
 ${hero}
 ${advantages}
-${compare}
 ${business}
 ${themes}
 ${integration}
@@ -2218,8 +2298,22 @@ function mimeSubject(str){
 function mimeBody(str){
   return utf8B64(str).replace(/(.{76})/g, '$1\r\n').replace(/\r\n$/, '');
 }
+function emailSafeHTML(h){
+  // дублируем цвет фона атрибутом bgcolor — его понимают все почтовые клиенты
+  h = h.replace(/<td([^>]*?) style="background:(#[0-9A-Fa-f]{3,6})/g, (m, attrs, col) => /bgcolor=/.test(attrs) ? m : `<td${attrs} bgcolor="${col}" style="background:${col}`);
+  // таблицам без явной ширины — 100%, иначе Outlook сжимает их по содержимому
+  h = h.replace(/<table role="presentation"(?![^>]*width=)/g, '<table role="presentation" width="100%"');
+  return h;
+}
 function letterAsHtmlDoc(){
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="x-apple-disable-message-reformatting"><style>@media only screen and (max-width:480px){.kp-col{display:block!important;width:100%!important;padding-right:0!important}.kp-pad{display:none!important}.kp-tbl{font-size:12px!important}}</style></head><body style="font-family:'TBank Sans',-apple-system,'Segoe UI',Roboto,Arial,Helvetica,sans-serif;color:#333;max-width:640px;margin:0 auto;">${buildLetterHTML()}</body></html>`;
+  const css = '@media only screen and (max-width:480px){.kp-wrap{width:100%!important}.kp-col{display:block!important;width:100%!important;padding-right:0!important}.kp-pad{display:none!important}.kp-tbl{font-size:12px!important}}';
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="x-apple-disable-message-reformatting"><style>${css}</style></head>`
+    + `<body style="margin:0;padding:0;font-family:'TBank Sans',-apple-system,'Segoe UI',Roboto,Arial,Helvetica,sans-serif;color:#333;">`
+    + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="left" style="padding:0">`
+    + `<!--[if mso]><table role="presentation" width="640" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->`
+    + `<div class="kp-wrap" style="max-width:640px;font-family:'TBank Sans',-apple-system,'Segoe UI',Roboto,Arial,Helvetica,sans-serif;font-size:14px;line-height:1.55;color:#333">`
+    + emailSafeHTML(buildLetterHTML())
+    + `</div><!--[if mso]></td></tr></table><![endif]--></td></tr></table></body></html>`;
 }
 
 $('btnLanding').onclick = ()=>{
@@ -2341,8 +2435,6 @@ function msgModel(){
   var m = {greeting: greetingPlain(), sections: [], deadline: '', sign: signatureLines()};
   var key = effectsKey();
   if(key) m.sections.push({icon:'📈', title:'Что это даёт', items: EFFECTS[key].blocks.map(function(b){ return {text: b.big + ' — ' + b.label}; })});
-  var cmp = compareLines();
-  if(cmp.length) m.sections.push({icon:'📊', title: compareTitle(compareCols()), items: cmp.map(function(t){ return {text:t}; })});
   var cond = [];
   getProductBlocks().forEach(function(b){
     if(b.name==='Кредит') cond.push({text:'Кредит — 14–32% годовых, ставка подбирается индивидуально под каждого клиента'});
@@ -2452,7 +2544,7 @@ function uiAfterUpdate(){
   var meta = $('pvMeta');
   meta.classList.remove('warn');
   if(uiChannel==='email'){
-    meta.textContent = 'Почта · HTML-письмо, .eml для Outlook';
+    meta.textContent = letterMode==='short' ? 'Почта · короткое письмо: приложите файл лендинга' : 'Почта · HTML-письмо, .eml для Outlook';
   } else {
     var c = CHANNELS[uiChannel];
     $('msgPreview').innerHTML = msgPreviewHTML(uiChannel);
@@ -2465,7 +2557,17 @@ function uiAfterUpdate(){
   }
 }
 
+function setLetterMode(m){
+  letterMode = m;
+  try{ localStorage.setItem('kpLetterMode', m); }catch(e){}
+  document.querySelectorAll('.mode-seg [data-mode]').forEach(function(b){ b.setAttribute('aria-checked', String(b.dataset.mode===m)); });
+  update();
+}
 (function initUI(){
+  document.querySelectorAll('.mode-seg [data-mode]').forEach(function(b){
+    b.setAttribute('aria-checked', String(b.dataset.mode===letterMode));
+    b.addEventListener('click', function(){ setLetterMode(b.dataset.mode); });
+  });
   // вкладки каналов и подписи полей связи — иконками
   document.querySelectorAll('.seg [data-ch]').forEach(function(b){
     var nm = CHANNELS[b.dataset.ch].name;
